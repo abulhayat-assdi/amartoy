@@ -1,0 +1,18 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF1BE"/>
+      <stop offset="55%" stop-color="#FFDF85"/>
+      <stop offset="100%" stop-color="#FFCA74"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="900" fill="url(#bg)"/>
+  <circle cx="710" cy="170" r="150" fill="rgba(255,255,255,0.18)"/>
+  <circle cx="180" cy="730" r="120" fill="rgba(255,255,255,0.16)"/>
+  <rect x="140" y="120" width="620" height="470" rx="54" fill="rgba(255,255,255,0.20)"/>
+  <rect x="210" y="210" width="480" height="300" rx="42" fill="rgba(255,255,255,0.26)"/>
+  <rect x="170" y="660" width="560" height="120" rx="30" fill="rgba(255,255,255,0.84)"/>
+  <text x="450" y="730" text-anchor="middle" fill="#162364" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="800">Blocks Builder</text>
+  <text x="450" y="188" text-anchor="middle" fill="#162364" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">STEM building set</text>
+  <text x="450" y="780" text-anchor="middle" fill="#4A557E" font-family="Arial, Helvetica, sans-serif" font-size="24">Dummy product image</text>
+</svg>

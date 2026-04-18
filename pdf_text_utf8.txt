@@ -1,0 +1,2023 @@
+﻿
+
+AMARTOY - FRONT-END IMPLEMENTATION 
+PLAN
+ 
+Front-End Implementation Master Plan 
+Comprehensive Blueprint for Developers 
+ 
+ 
+Sections: A. Design System  ┬╖  B. Global Components  ┬╖  C. Page-by-Page Layouts  ┬╖  D. Animations  ┬╖  E. Tech Stack 
+ 
+ 
+
+A. Overall Design System 
+This section defines every visual token that governs the entire AmarToy front-end. Every color, font, spacing 
+value, shadow, and shape rule documented here must be codified as CSS custom properties (variables) in a single 
+:root block so that every component automatically inherits them. No magic numbers should ever appear directly 
+inside component CSS.
+ 
+ 
+A.1 ΓÇö Color Palette 
+The AmarToy color language is warm, playful, and high-contrast. It uses an orange-dominant primary with a 
+warm yellow secondary, which immediately communicates fun and energy to its target audience of parents and 
+children. The site background is a warm off-white rather than pure white, which softens the brightness and feels 
+more premium.
+ 
+ 
+Primary (Orange) 
+#FF6B35
+ 
+CTA Buttons, Highlights, Links 
+Secondary (Yellow) 
+#FFD166
+ 
+Badges, Star Ratings, Highlights 
+Dark Background 
+#1A1A2E
+ 
+Hero section, Side panel, dark overlays 
+Page Background 
+#FFF8F0
+ 
+Warm off-white site background 
+Card Background 
+#FFFFFF
+ 
+Product cards, modals, forms 
+Text Dark 
+#1C1C1C
+ 
+Body text, headings 
+Text Mid 
+#555555
+ 
+Secondary text, descriptions 
+Text Light 
+#999999
+ 
+Captions, meta labels 
+Border 
+#EEEEEE
+ 
+Card borders, dividers, input borders 
+Success Green 
+#2ECC71
+ 
+Order success, in-stock, badges 
+Accent Pink 
+#FF4F81
+ 
+Wishlist heart, Sale badges, hover states 
+ 
+CSS Custom Properties (Design Tokens) 
+Place the following block at the very top of your main CSS file (e.g., tokens.css or variables.css): 
+:root {
+ 
+  --color-primary:      #FF6B35;   /* CTA buttons, links, highlights */
+ 
+  --color-secondary:    #FFD166;   /* Badges, ratings, warnings */
+ 
+  --color-dark-bg:      #1A1A2E;   /* Hero, side panel, dark sections */
+ 
+  --color-page-bg:      #FFF8F0;   /* Warm page background */
+ 
+  --color-card-bg:      #FFFFFF;   /* Cards, forms, modals */
+ 
+  --color-text-dark:    #1C1C1C;   /* Headings, primary body */
+ 
+  --color-text-mid:     #555555;   /* Descriptions, secondary text */
+ 
+  --color-text-light:   #999999;   /* Captions, meta labels */
+ 
+  --color-border:       #EEEEEE;   /* Dividers, card borders */
+ 
+  --color-success:      #2ECC71;   /* Order success, in-stock */
+ 
+  --color-accent-pink:  #FF4F81;   /* Sale badge, wishlist, hover */
+ 
+  --color-white:        #FFFFFF;
+ 
+  --color-black:        #000000;
+ 
+
+}
+ 
+ 
+Gradient Definitions 
+/* Hero slide gradient overlay */
+ 
+.hero-overlay { background: linear-gradient(135deg, rgba(26,26,46,0.85) 0%, 
+rgba(26,26,46,0.3) 60%, transparent 100%); }
+ 
+ 
+/* CTA button hover gradient */
+ 
+.btn-primary:hover { background: linear-gradient(135deg, #FF6B35 0%, #FF4F81 100%); }
+ 
+ 
+/* Category card gradient on hover */
+ 
+.category-card:hover::after { background: linear-gradient(180deg, transparent 30%, 
+rgba(255,107,53,0.85) 100%); }
+ 
+ 
+ 
+A.2 ΓÇö Typography System 
+The AmarToy theme uses rounded, friendly typefaces that communicate playfulness while maintaining 
+readability. The primary display font should be a rounded, bold sans-serif. Nunito (Google Fonts) is the closest 
+open-source match. For a more toy-like whimsical feel in headings, "Fredoka One" can be used as an alternative 
+display font.
+ 
+ 
+Element Font Family Weight Size (px) Color Line Height 
+Display / H1 
+Nunito / Fredoka 
+One
+ 
+800 ExtraBold 52ΓÇô64px #1C1C1C 1.1 
+H2 Section Title 
+Nunito
+ 
+700 Bold 38ΓÇô44px #1C1C1C 1.2 
+H3 Card Title 
+Nunito
+ 
+700 Bold 24ΓÇô28px #1C1C1C 1.3 
+H4 
+Label/Sub-heading 
+Nunito
+ 
+600 SemiBold 18ΓÇô20px #FF6B35 1.4 
+H5/H6 
+Nunito
+ 
+600 SemiBold 14ΓÇô16px #555555 1.4 
+Body Paragraph 
+Nunito Sans / Open 
+Sans
+ 
+400 Regular 16px #555555 1.7 
+Small / Caption 
+Nunito Sans
+ 
+400 Regular 13ΓÇô14px #999999 1.5 
+Button Label 
+Nunito
+ 
+700 Bold 14ΓÇô16px #FFFFFF 1 
+Price Tag 
+Nunito
+ 
+700 Bold 20ΓÇô24px #FF6B35 1 
+Nav Links 
+Nunito
+ 
+600 SemiBold 15px #1C1C1C 1 
+Category Label 
+Nunito
+ 
+700 Bold 13px 
+uppercase 
+#FFFFFF 1 
+ 
+Google Fonts Import 
+/* Add to <head> in HTML or @import in CSS */
+ 
+
+@import 
+url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=
+Nunito+Sans:wght@400;600&display=swap');
+ 
+ 
+Typography CSS Variables 
+:root {
+ 
+  --font-display:  "Nunito", sans-serif;   /* All headings */
+ 
+  --font-body:     "Nunito Sans", sans-serif; /* Body text */
+ 
+  --font-mono:     "Courier New", monospace; /* Code snippets only */
+ 
+ 
+  --text-xs:    0.75rem;   /* 12px - tiny labels */
+ 
+  --text-sm:    0.875rem;  /* 14px - captions, meta */
+ 
+  --text-base:  1rem;      /* 16px - body default */
+ 
+  --text-lg:    1.125rem;  /* 18px - large body */
+ 
+  --text-xl:    1.25rem;   /* 20px - card titles */
+ 
+  --text-2xl:   1.5rem;    /* 24px - H3 */
+ 
+  --text-3xl:   2rem;      /* 32px - H2 sub */
+ 
+  --text-4xl:   2.5rem;    /* 40px - H2 */
+ 
+  --text-5xl:   3.25rem;   /* 52px - H1 */
+ 
+  --text-6xl:   4rem;      /* 64px - Hero title */
+ 
+}
+ 
+ 
+ 
+A.3 ΓÇö Spacing, Layout Grid & Container 
+The layout uses a standard 12-column grid with a maximum content width of 1280px centered on screen. 
+Sections use generous vertical padding to give the playful, airy feel consistent with the toy brand. All spacing 
+values follow an 8px base unit scale.
+ 
+ 
+CSS Spacing Variables 
+:root {
+ 
+  --space-1:  0.25rem;  /* 4px */
+ 
+  --space-2:  0.5rem;   /* 8px */
+ 
+  --space-3:  0.75rem;  /* 12px */
+ 
+  --space-4:  1rem;     /* 16px */
+ 
+  --space-5:  1.25rem;  /* 20px */
+ 
+  --space-6:  1.5rem;   /* 24px */
+ 
+  --space-8:  2rem;     /* 32px */
+ 
+  --space-10: 2.5rem;   /* 40px */
+ 
+  --space-12: 3rem;     /* 48px */
+ 
+  --space-16: 4rem;     /* 64px */
+ 
+  --space-20: 5rem;     /* 80px */
+ 
+  --space-24: 6rem;     /* 96px */
+ 
+ 
+  --container-max: 1280px;
+ 
+  --container-pad: 1.5rem;   /* Horizontal page padding */
+ 
+
+  --section-pad-y: 5rem;     /* Top/bottom padding for sections */
+ 
+}
+ 
+ 
+Container Class 
+.container {
+ 
+  width: 100%;
+ 
+  max-width: var(--container-max);
+ 
+  margin-inline: auto;
+ 
+  padding-inline: var(--container-pad);
+ 
+}
+ 
+ 
+Responsive Breakpoints 
+/* Mobile first */
+ 
+@media (min-width: 480px)  { /* xs: small phone */ }
+ 
+@media (min-width: 640px)  { /* sm: large phone */ }
+ 
+@media (min-width: 768px)  { /* md: tablet portrait */ }
+ 
+@media (min-width: 1024px) { /* lg: tablet landscape / small laptop */ }
+ 
+@media (min-width: 1280px) { /* xl: desktop */ }
+ 
+@media (min-width: 1536px) { /* 2xl: large desktop */ }
+ 
+ 
+ 
+A.4 ΓÇö Graphic Elements, Shadows & Border Radii 
+The AmarToy design language uses soft, rounded corners consistently ΓÇö never sharp 0px corners on interactive 
+elements. The shadows are warm-tinted (never pure gray) to harmonize with the orange palette.
+ 
+ 
+Border Radius Tokens 
+:root {
+ 
+  --radius-sm:   6px;    /* Input fields, small tags */
+ 
+  --radius-md:   12px;   /* Product cards, small buttons */
+ 
+  --radius-lg:   20px;   /* Large feature cards, panels */
+ 
+  --radius-xl:   28px;   /* Hero pill CTAs, hero cards */
+ 
+  --radius-full: 999px;  /* Badge pills, avatar circles */
+ 
+}
+ 
+ 
+Shadow Tokens 
+:root {
+ 
+  /* Warm-tinted card shadow */
+ 
+  --shadow-card:   0 4px 16px rgba(255, 107, 53, 0.08);
+ 
+  /* Elevated hover shadow */
+ 
+  --shadow-hover:  0 12px 40px rgba(255, 107, 53, 0.18);
+ 
+  /* Navbar / sticky header shadow */
+ 
+  --shadow-nav:    0 2px 20px rgba(0, 0, 0, 0.08);
+ 
+  /* Floating element shadow (chat widget) */
+ 
+
+  --shadow-float:  0 8px 32px rgba(255, 107, 53, 0.25);
+ 
+  /* Modal / overlay shadow */
+ 
+  --shadow-modal:  0 24px 80px rgba(0, 0, 0, 0.24);
+ 
+}
+ 
+ 
+Decorative Graphic Shapes 
+The site uses small SVG decorative elements scattered around sections for a toylike whimsy: 
+ΓùÅ 
+Star shapes (6-pointed, outlined) ΓÇö scattered in hero background at varying opacities (0.2ΓÇô0.6) and sizes 
+(12pxΓÇô40px). Used extensively on the hero slides.
+ 
+ΓùÅ 
+Cloud shapes ΓÇö appear in the hero banner, floating behind the product character. Animate with a slow 
+horizontal drift (translateX loop, ~8s).
+ 
+ΓùÅ 
+Plus/cross symbols (thin stroke, rotated 45┬░) ΓÇö used as section decoration on Contact page. 
+ΓùÅ 
+Circle outlines ΓÇö used on Contact page as decorative floating elements. 
+ΓùÅ 
+Color blobs ΓÇö soft, amorphous, semi-transparent blobs in brand colors used as background elements in 
+the About section.
+ 
+All decorative shapes should be positioned absolutely within their section containers with pointer-events: none 
+and user-select: none. Use z-index: 0 so they sit below content (z-index: 1+).
+ 
+ 
+Image Specifications 
+Product Grid Thumbnails 
+Square 1:1 ratio ΓÇö 630├ù630px render. 
+CSS: object-fit: cover, aspect-ratio: 
+1
+ 
+ 
+Product Single Gallery 
+Portrait 600├ù660px (Γëê 10:11). CSS: 
+object-fit: contain, background: 
+#FAFAFA
+ 
+ 
+Hero Banner (Full-Width) 
+Min 1440├ù680px, or 16:7 ratio. CSS: 
+width:100%, height: 100vh max, 
+object-fit: cover
+ 
+ 
+Category Card Image 
+650├ù572px (Γëê 8:7 ratio). CSS: 
+object-fit: cover, border-radius: 
+--radius-md
+ 
+ 
+Blog Portfolio Card 
+840├ù560px (3:2 ratio). CSS: 
+object-fit: cover, aspect-ratio: 3/2, 
+overflow: hidden
+ 
+ 
+Testimonial Avatar 
+120├ù120px circle. CSS: border-radius: 
+50%, object-fit: cover
+ 
+ 
+ 
+
+B. Global Component Architecture 
+These components appear on every page and define the outer shell of the application. They must be coded as 
+isolated, reusable components ΓÇö in React they are top-level layout components; in plain HTML they are included 
+via partials or template literals.
+ 
+ 
+B.1 ΓÇö Header / Navigation Bar 
+Visual Anatomy 
+The header is a sticky, full-width bar that transitions from transparent (overlaid on the hero) to a solid 
+white/opaque state when the user scrolls down past 80px. It has three distinct zones:
+ 
+ΓùÅ 
+LEFT ZONE (25% width): Logo image. Links to home. On mobile, this also serves as the brand anchor when 
+the hamburger is tapped.
+ 
+ΓùÅ 
+CENTER ZONE (50% width): Horizontal navigation menu. Items: Home (dropdown), Pages (dropdown), 
+Shop (dropdown), Blog (dropdown), Contacts. Each top-level item has a dropdown submenu that appears 
+on hover.
+ 
+ΓùÅ 
+RIGHT ZONE (25% width): Three icon controls ΓÇö (1) Cart icon with item-count badge bubble, (2) Search 
+icon (opens a full-width search overlay), (3) Hamburger/Panel icon (opens the right-side info panel).
+ 
+ 
+CSS Implementation Plan 
+.site-header {
+ 
+  position: sticky;          /* OR fixed, depends on scroll behavior */
+ 
+  top: 0;
+ 
+  left: 0;
+ 
+  width: 100%;
+ 
+  z-index: 1000;
+ 
+  transition: background 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
+ 
+  padding: 1.25rem 0;        /* Default tall padding */
+ 
+}
+ 
+.site-header.scrolled {
+ 
+  background: var(--color-white);
+ 
+  box-shadow: var(--shadow-nav);
+ 
+  padding: 0.75rem 0;        /* Shrinks when scrolled */
+ 
+}
+ 
+.header-inner {
+ 
+  display: flex;
+ 
+  align-items: center;
+ 
+  justify-content: space-between;
+ 
+  gap: 1rem;
+ 
+}
+ 
+ 
+Navigation Dropdown Architecture 
+
+Each nav item with children uses CSS :hover + a sibling .dropdown-menu that is hidden by default and revealed 
+on hover. The dropdown appears with a fade-in + slight translateY(8px ΓåÆ 0) motion.
+ 
+.nav-item { position: relative; }
+ 
+.dropdown-menu {
+ 
+  position: absolute;
+ 
+  top: calc(100% + 10px);
+ 
+  left: 0;
+ 
+  min-width: 200px;
+ 
+  background: var(--color-white);
+ 
+  border-radius: var(--radius-md);
+ 
+  box-shadow: var(--shadow-modal);
+ 
+  opacity: 0;
+ 
+  visibility: hidden;
+ 
+  transform: translateY(8px);
+ 
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+ 
+  z-index: 999;
+ 
+}
+ 
+.nav-item:hover .dropdown-menu {
+ 
+  opacity: 1;
+ 
+  visibility: visible;
+ 
+  transform: translateY(0);
+ 
+}
+ 
+ 
+Cart Badge 
+.cart-icon-wrapper { position: relative; display: inline-flex; }
+ 
+.cart-count-badge {
+ 
+  position: absolute;
+ 
+  top: -6px;
+ 
+  right: -8px;
+ 
+  width: 18px; height: 18px;
+ 
+  background: var(--color-primary);
+ 
+  color: white;
+ 
+  border-radius: var(--radius-full);
+ 
+  font-size: 11px;
+ 
+  font-weight: 700;
+ 
+  display: flex; align-items: center; justify-content: center;
+ 
+}
+ 
+ 
+Scroll Behavior ΓÇö JavaScript 
+window.addEventListener('scroll', () => {
+ 
+  const header = document.querySelector('.site-header');
+ 
+  header.classList.toggle('scrolled', window.scrollY > 80);
+ 
+});
+ 
+ 
+Mobile Header 
+Below 1024px breakpoint: hide center nav links. Show only Logo (left) and right icons. The hamburger icon opens 
+the mobile nav drawer from the left side. On mobile, the right panel icon opens the side info panel.
+ 
+
+ 
+ 
+B.2 ΓÇö Right-Side Info Panel 
+Visual Description 
+Triggered by the rightmost icon in the header (a grid/apps-style icon or three-dots). A panel slides in from the 
+right with a dark overlay covering the rest of the page. The panel itself has a dark navy (--color-dark-bg) 
+background.
+ 
+Panel Content Structure (top to bottom) 
+1. 
+Logo ΓÇö the AmarToy logo (white version) at the top of the panel, centered or left-aligned with padding. 
+2. 
+Close "X" button ΓÇö top-right corner of the panel, white, tappable. 
+3. 
+Social Media Icons ΓÇö horizontal row: Facebook, Instagram, WhatsApp, YouTube. Icons are circular outlined 
+buttons (border: 1px solid rgba(255,255,255,0.3)), turning solid orange on hover.
+ 
+4. 
+Contact Section ΓÇö label "Have a Project?" followed by info@website.com link, then a "Want to Work With 
+Me? ΓåÆ Send Brief" CTA link.
+ 
+5. 
+Phone number ΓÇö large, bold, white. Format: +1 840 841 25 69. 
+6. 
+Newsletter brief CTA (optional) ΓÇö "Go to Shop" link. 
+ 
+CSS Implementation 
+.side-panel {
+ 
+  position: fixed;
+ 
+  top: 0; right: 0;
+ 
+  width: 340px;
+ 
+  height: 100vh;
+ 
+  background: var(--color-dark-bg);
+ 
+  padding: 2.5rem 2rem;
+ 
+  transform: translateX(100%);
+ 
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+ 
+  z-index: 1100;
+ 
+  overflow-y: auto;
+ 
+}
+ 
+.side-panel.open { transform: translateX(0); }
+ 
+.side-panel-overlay {
+ 
+  position: fixed; inset: 0;
+ 
+  background: rgba(0,0,0,0.5);
+ 
+  backdrop-filter: blur(3px);
+ 
+  opacity: 0; visibility: hidden;
+ 
+  transition: opacity 0.4s ease, visibility 0.4s;
+ 
+  z-index: 1099;
+ 
+}
+ 
+.side-panel-overlay.open { opacity: 1; visibility: visible; }
+ 
+ 
+
+Social Icon Buttons 
+.social-icons-row { display: flex; gap: 0.75rem; margin: 2rem 0; }
+ 
+.social-icon-btn {
+ 
+  width: 40px; height: 40px;
+ 
+  border: 1.5px solid rgba(255,255,255,0.3);
+ 
+  border-radius: var(--radius-full);
+ 
+  display: flex; align-items: center; justify-content: center;
+ 
+  color: white;
+ 
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+ 
+}
+ 
+.social-icon-btn:hover {
+ 
+  background: var(--color-primary);
+ 
+  border-color: var(--color-primary);
+ 
+  transform: translateY(-2px);
+ 
+}
+ 
+ 
+ 
+B.3 ΓÇö Footer 
+Footer Layout (Two-Tier Structure) 
+The AmarToy footer has two zones: a dark main footer area and a minimal bottom bar for copyright. 
+Main Footer ΓÇö 4-Column Grid 
+ΓùÅ 
+Column 1: Logo + short tagline + social media icon row (Facebook, Twitter, Dribbble, Instagram). 
+ΓùÅ 
+Column 2: Quick navigation links (Home, Services, About Us, Shop, Contacts). 
+ΓùÅ 
+Column 3: Contact info ΓÇö Address label, email, phone number. 
+ΓùÅ 
+Column 4: Newsletter subscribe form ΓÇö email input + Subscribe button + privacy policy checkbox. 
+ 
+Footer CSS 
+.site-footer { background: var(--color-dark-bg); color: var(--color-text-light); padding: 
+5rem 0 2rem; }
+ 
+.footer-grid {
+ 
+  display: grid;
+ 
+  grid-template-columns: 2fr 1fr 1fr 2fr;
+ 
+  gap: 3rem;
+ 
+}
+ 
+@media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+ 
+@media (max-width: 640px)  { .footer-grid { grid-template-columns: 1fr; } }
+ 
+.footer-bottom {
+ 
+  margin-top: 3rem;
+ 
+  padding-top: 1.5rem;
+ 
+  border-top: 1px solid rgba(255,255,255,0.1);
+ 
+  text-align: center;
+ 
+  font-size: var(--text-sm);
+ 
+  color: rgba(255,255,255,0.4);
+ 
+
+}
+ 
+ 
+Newsletter Input + Button 
+.newsletter-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
+ 
+.newsletter-input {
+ 
+  flex: 1;
+ 
+  padding: 0.75rem 1rem;
+ 
+  border-radius: var(--radius-sm);
+ 
+  border: 1px solid rgba(255,255,255,0.2);
+ 
+  background: rgba(255,255,255,0.05);
+ 
+  color: white;
+ 
+  font-size: var(--text-sm);
+ 
+}
+ 
+.newsletter-btn {
+ 
+  padding: 0.75rem 1.25rem;
+ 
+  background: var(--color-primary);
+ 
+  color: white;
+ 
+  border-radius: var(--radius-sm);
+ 
+  font-weight: 700;
+ 
+  transition: background 0.2s;
+ 
+}
+ 
+ 
+ 
+B.4 ΓÇö Floating Live Chat Widget (Bottom-Left) 
+A persistent floating widget fixed to the bottom-left corner of every page. It features a "Please Chat" label and a 
+chat bubble icon. It pulses gently to draw attention without being obtrusive.
+ 
+ 
+HTML Structure 
+<div class="floating-chat" id="floatingChat">
+ 
+  <div class="floating-chat__bubble">
+ 
+    <svg><!-- chat icon SVG --></svg>
+ 
+  </div>
+ 
+  <span class="floating-chat__label">Please Chat</span>
+ 
+</div>
+ 
+ 
+CSS 
+.floating-chat {
+ 
+  position: fixed;
+ 
+  bottom: 2rem;
+ 
+  left: 2rem;
+ 
+  display: flex;
+ 
+  align-items: center;
+ 
+  gap: 0.5rem;
+ 
+  background: var(--color-primary);
+ 
+
+  color: white;
+ 
+  padding: 0.75rem 1.25rem;
+ 
+  border-radius: var(--radius-full);
+ 
+  box-shadow: var(--shadow-float);
+ 
+  cursor: pointer;
+ 
+  z-index: 900;
+ 
+  animation: chatPulse 2.5s ease-in-out infinite;
+ 
+}
+ 
+@keyframes chatPulse {
+ 
+  0%, 100% { box-shadow: var(--shadow-float); }
+ 
+  50% { box-shadow: 0 8px 32px rgba(255,107,53,0.55), 0 0 0 8px rgba(255,107,53,0.12); }
+ 
+}
+ 
+.floating-chat:hover { transform: translateY(-3px) scale(1.04); transition: transform 
+0.2s ease; }
+ 
+ 
+ 
+B.5 ΓÇö Search Overlay 
+Triggered by the search icon in the header. A full-screen dark overlay appears with a centered, large input field. 
+Pressing Escape or clicking outside the field closes it.
+ 
+.search-overlay {
+ 
+  position: fixed; inset: 0;
+ 
+  background: rgba(26, 26, 46, 0.96);
+ 
+  z-index: 1200;
+ 
+  display: flex; align-items: center; justify-content: center;
+ 
+  opacity: 0; visibility: hidden;
+ 
+  transition: opacity 0.3s ease;
+ 
+}
+ 
+.search-overlay.active { opacity: 1; visibility: visible; }
+ 
+.search-overlay__input {
+ 
+  width: min(600px, 90vw);
+ 
+  background: transparent;
+ 
+  border: none;
+ 
+  border-bottom: 2px solid var(--color-primary);
+ 
+  color: white;
+ 
+  font-size: 2.5rem;
+ 
+  text-align: center;
+ 
+  padding-bottom: 1rem;
+ 
+  outline: none;
+ 
+}
+ 
+ 
+ 
+ 
+
+C. Page-by-Page Layout Structure 
+ 
+C.1 ΓÇö Home Page (Home 1) 
+The homepage is the most visually rich page. It stacks the following sections vertically, each with its own 
+background and rhythm:
+ 
+ 
+C.1.1 ΓÇö Hero Slider (Full-Viewport) 
+ΓùÅ 
+Height: 100vh (or min 680px). Full-width. 
+ΓùÅ 
+Background: Dark navy (#1A1A2E) with product character images (PNG with transparent background) 
+placed on the right half.
+ 
+ΓùÅ 
+Left side: Pre-heading label (small uppercase text, e.g., "Pick the best toy"), H1 heading, subtext paragraph, 
+"Discover Now" CTA button.
+ 
+ΓùÅ 
+Floating decorative elements: 6ΓÇô8 star SVGs scattered across the slide at varying opacity. Clouds behind the 
+character image. These are absolutely positioned within the slide container.
+ 
+ΓùÅ 
+Navigation dots at the bottom-center. Navigation arrows (left/right) on the sides. 
+ΓùÅ 
+Slide transition: Crossfade (opacity transition) or horizontal slide (translateX). Duration: 600ms ease-in-out. 
+ΓùÅ 
+Auto-advance: 5000ms interval. Pause on hover. 
+ 
+Hero CTA Button Style 
+.btn-discover {
+ 
+  display: inline-flex;
+ 
+  align-items: center;
+ 
+  gap: 0.5rem;
+ 
+  padding: 1rem 2rem;
+ 
+  background: var(--color-primary);
+ 
+  color: white;
+ 
+  border-radius: var(--radius-full);
+ 
+  font-size: var(--text-lg);
+ 
+  font-weight: 700;
+ 
+  letter-spacing: 0.03em;
+ 
+  box-shadow: 0 8px 24px rgba(255,107,53,0.3);
+ 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+ 
+}
+ 
+.btn-discover:hover { transform: translateY(-3px); box-shadow: 0 14px 36px 
+rgba(255,107,53,0.45); }
+ 
+.btn-discover:active { transform: translateY(-1px); }
+ 
+ 
+C.1.2 ΓÇö Product Categories Section 
+ΓùÅ 
+Section label: Small uppercase tag ("Categories") above the heading. 
+ΓùÅ 
+Heading: "We design toys not just for kids but with kids" ΓÇö 2-line H2 centered above the grid. 
+
+ΓùÅ 
+Layout: 4-column grid on desktop, 2-column on tablet, 1-column on mobile. 
+ΓùÅ Each category card: A tall card (Γëê 8:7 aspect ratio image). Image fills top ~75% of the card. Bottom area 
+shows category name (H6) and "Shop Now" link with an arrow. On hover: image scales to 1.06, a primary 
+color gradient overlay slides up from the bottom, and the text transitions to white.
+ 
+ 
+Category Card CSS 
+.category-card {
+ 
+  position: relative;
+ 
+  border-radius: var(--radius-lg);
+ 
+  overflow: hidden;
+ 
+  cursor: pointer;
+ 
+  box-shadow: var(--shadow-card);
+ 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+ 
+}
+ 
+.category-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+ 
+.category-card img { width: 100%; aspect-ratio: 8/7; object-fit: cover; transition: 
+transform 0.5s ease; }
+ 
+.category-card:hover img { transform: scale(1.06); }
+ 
+.category-card__overlay {
+ 
+  position: absolute; inset: 0;
+ 
+  background: linear-gradient(180deg, transparent 40%, rgba(255,107,53,0.9) 100%);
+ 
+  opacity: 0;
+ 
+  transition: opacity 0.4s ease;
+ 
+}
+ 
+.category-card:hover .category-card__overlay { opacity: 1; }
+ 
+ 
+C.1.3 ΓÇö Popular in Store (Product Grid ΓÇö First Row) 
+ΓùÅ 
+Heading: "Shop AmarToy & Games" (small pre-label), "Popular in Store" (H2). 
+ΓùÅ 
+Grid: 4 products per row on desktop. Shows first 4 items. "View All" link below. 
+ΓùÅ 
+Each card: White card, rounded corners (--radius-md), no visible border (shadow only). Product image (1:1 
+square), product name (H3), price (bold orange), "Buy Now" button (pill-shaped, solid orange), and a 
+wishlist heart icon (top-right of image).
+ 
+ΓùÅ 
+Sale badge: Absolute top-left of image. Pill shape, pink background (#FF4F81), bold white text (e.g., 
+"-20%").
+ 
+ 
+Product Card CSS 
+.product-card {
+ 
+  background: var(--color-card-bg);
+ 
+  border-radius: var(--radius-md);
+ 
+  box-shadow: var(--shadow-card);
+ 
+  overflow: hidden;
+ 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+ 
+}
+ 
+.product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+ 
+.product-card__img-wrap { position: relative; overflow: hidden; aspect-ratio: 1; }
+ 
+
+.product-card__img { width: 100%; height: 100%; object-fit: cover; transition: transform 
+0.4s ease; }
+ 
+.product-card:hover .product-card__img { transform: scale(1.05); }
+ 
+.product-card__wishlist {
+ 
+  position: absolute; top: 10px; right: 10px;
+ 
+  width: 32px; height: 32px;
+ 
+  background: white;
+ 
+  border-radius: var(--radius-full);
+ 
+  display: flex; align-items: center; justify-content: center;
+ 
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+ 
+  cursor: pointer;
+ 
+  color: var(--color-text-light);
+ 
+  transition: color 0.2s;
+ 
+}
+ 
+.product-card__wishlist.active { color: var(--color-accent-pink); }
+ 
+.product-card__sale-badge {
+ 
+  position: absolute; top: 10px; left: 10px;
+ 
+  background: var(--color-accent-pink);
+ 
+  color: white; font-weight: 700; font-size: 12px;
+ 
+  padding: 3px 10px;
+ 
+  border-radius: var(--radius-full);
+ 
+}
+ 
+.product-card__body { padding: 1.25rem; }
+ 
+.product-card__name { font-size: var(--text-lg); font-weight: 700; color: 
+var(--color-text-dark); margin-bottom: 0.5rem; }
+ 
+.product-card__price { font-size: var(--text-xl); font-weight: 700; color: 
+var(--color-primary); }
+ 
+.product-card__price--original { text-decoration: line-through; color: 
+var(--color-text-light); font-size: var(--text-base); margin-right: 0.5rem; }
+ 
+ 
+C.1.4 ΓÇö About / "We Help You Take Care of Kids" Section 
+ΓùÅ 
+Split 2-column layout: Left = stacked images (two images overlapping), Right = text content. 
+ΓùÅ 
+Left column: Primary image (tall, rounded corners) with a secondary smaller image overlapping its 
+bottom-right at a slight rotation. A floating badge/icon (e.g., a smiley face SVG badge) sits at the overlap 
+point.
+ 
+ΓùÅ 
+Right column: Icon + small label ("creative approach"), H2 heading, paragraph text, stats row (e.g., "5000+ 
+Happy Kids"), and a "Shop Now" CTA button.
+ 
+ΓùÅ 
+Background: Light warm (#FFF8F0). 
+ 
+C.1.5 ΓÇö Second Popular Products Grid (8 Products) 
+ΓùÅ 
+Same component as C.1.3, but displays 8 products (2 rows ├ù 4 columns). 
+ΓùÅ 
+Section appears on a slightly different background (pure white) to alternate rhythm. 
+ 
+C.1.6 ΓÇö Features Strip (4 Icons) 
+ΓùÅ 
+A horizontal 4-column strip. Background: light cream or pale yellow. 
+
+ΓùÅ 
+Each column: SVG icon (simple, line-style), bold title (e.g., "Best Prices"), subtitle (e.g., "Affordable"). 
+ΓùÅ 
+Items: Best Prices / Affordable, Fast Shipment / Express, Buyers Protection / Guarantee, Live Support / 
+Online.
+ 
+ 
+C.1.7 ΓÇö Video Section 
+ΓùÅ 
+A full-width section with a blurred background image. Centered "PLAY" button ΓÇö a large circle with a play 
+triangle icon.
+ 
+ΓùÅ 
+Clicking opens a modal with an embedded YouTube/Vimeo video iframe. 
+.play-btn {
+ 
+  width: 80px; height: 80px;
+ 
+  border-radius: 50%;
+ 
+  background: var(--color-primary);
+ 
+  display: flex; align-items: center; justify-content: center;
+ 
+  animation: playPulse 2s ease-in-out infinite;
+ 
+}
+ 
+@keyframes playPulse {
+ 
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.4); }
+ 
+  50% { box-shadow: 0 0 0 18px rgba(255,107,53,0); }
+ 
+}
+ 
+ 
+C.1.8 ΓÇö Testimonials Slider 
+ΓùÅ 
+White card testimonials with avatar, name, role, and quote text. 
+ΓùÅ 
+Auto-scrolling carousel (3 visible on desktop, 1 on mobile). 
+ΓùÅ 
+Navigation dots below. Optional prev/next arrows. 
+ 
+C.1.9 ΓÇö Blog Latest News (4-Column Grid) 
+ΓùÅ 
+Section label + H2 heading. 
+ΓùÅ 
+4 blog post cards in a row. Each card: image (3:2 ratio, rounded corners), category tag (orange label), date, 
+post title (H4 link).
+ 
+ΓùÅ 
+Hover effect: image zooms, title color shifts to primary orange. 
+ 
+C.1.10 ΓÇö Brand Logos Marquee 
+ΓùÅ 
+A continuous horizontal scrolling strip of partner brand logos. 
+ΓùÅ 
+Implement with CSS animation: a double-duplicated list of logos that translates left infinitely. 
+.brand-marquee { overflow: hidden; }
+ 
+.brand-track { display: flex; gap: 3rem; animation: marquee 20s linear infinite; }
+ 
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); 
+} }
+ 
+ 
+ 
+
+C.2 ΓÇö Shop / Product List Page 
+Page Header Banner 
+ΓùÅ 
+Full-width banner below the main header. Background: warm cream or decorative SVG pattern. Centered 
+H1 "Shop" title. Breadcrumb navigation below (Home > Shop).
+ 
+ 
+Layout ΓÇö Two-Column (Sidebar + Grid) 
+ΓùÅ 
+Left sidebar (approx 280px, sticky): Contains Search box, Product Categories list, Price Range filter 
+(min/max inputs), Tags cloud.
+ 
+ΓùÅ 
+Right main area: Sort dropdown (top-right, "Sort by latest"), product grid (3 columns on desktop), 
+pagination at bottom.
+ 
+ 
+Sidebar CSS 
+.shop-layout { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; }
+ 
+@media (max-width: 1024px) { .shop-layout { grid-template-columns: 1fr; } /* sidebar 
+hidden/collapsible on mobile */ }
+ 
+.sidebar-widget { margin-bottom: 2rem; padding: 1.5rem; background: white; border-radius: 
+var(--radius-md); box-shadow: var(--shadow-card); }
+ 
+.sidebar-widget__title { font-size: var(--text-base); font-weight: 700; text-transform: 
+uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; color: var(--color-text-dark); }
+ 
+ 
+Price Range Slider CSS 
+input[type="range"] { accent-color: var(--color-primary); width: 100%; }
+ 
+ 
+Pagination 
+.pagination { display: flex; gap: 0.5rem; justify-content: center; margin-top: 3rem; }
+ 
+.page-btn { width: 40px; height: 40px; border-radius: var(--radius-sm); border: 1px solid 
+var(--color-border); display: flex; align-items: center; justify-content: center; }
+ 
+.page-btn.active { background: var(--color-primary); color: white; border-color: 
+var(--color-primary); }
+ 
+ 
+ 
+C.3 ΓÇö Product Single Page 
+Layout (2-Column) 
+ΓùÅ 
+LEFT column (55%): Product image gallery. Main large image (600├ù660 portrait). Below it: 4 thumbnail 
+images in a row (clickable, active thumbnail has orange border). Image click opens lightbox.
+ 
+ΓùÅ 
+RIGHT column (45%): Product details panel. 
+ 
+
+Right Column Contents (top to bottom) 
+7. 
+Breadcrumb: Home > Category > Product Name 
+8. 
+Product Name ΓÇö H1 heading 
+9. 
+Price ΓÇö large bold orange. If on sale, show original price struck-through in gray, new price in orange. 
+10. 
+Short description paragraph. 
+11. 
+Quantity control ΓÇö minus button, number input, plus button. Rounded pill shape. 
+12. 
+"Buy Now" button ΓÇö full-width, pill-shaped, solid orange (#FF6B35). Icon + text. 
+13. 
+"Add to Wishlist" ΓÇö secondary link/button with heart icon below main CTA. 
+14. 
+Product meta: Category, Tags, Product ID ΓÇö small gray text. 
+15. 
+Description/Reviews tabs ΓÇö two tab buttons. Active tab has orange underline border. 
+16. 
+Tab content area ΓÇö Description text or reviews form/list. 
+ 
+Quantity Stepper CSS 
+.qty-stepper { display: flex; align-items: center; gap: 0; border: 1px solid 
+var(--color-border); border-radius: var(--radius-full); overflow: hidden; width: 
+fit-content; }
+ 
+.qty-btn { width: 40px; height: 40px; background: transparent; font-size: 1.25rem; 
+cursor: pointer; transition: background 0.2s; }
+ 
+.qty-btn:hover { background: var(--color-primary); color: white; }
+ 
+.qty-input { width: 48px; text-align: center; border: none; border-left: 1px solid 
+var(--color-border); border-right: 1px solid var(--color-border); font-weight: 700; }
+ 
+ 
+Related Products 
+ΓùÅ 
+Below the main product content: "Related products" H2 heading + 3-column grid of product cards (same 
+component as shop grid).
+ 
+ 
+ 
+C.4 ΓÇö Cart Page 
+Layout 
+ΓùÅ 
+Full-width table for desktop (5 columns): Product image + name, Price, Quantity, Subtotal, Remove (├ù). 
+ΓùÅ 
+Below table: "Continue Shopping" button (left) and "Update Cart" button (right). Both outlined style, not 
+filled.
+ 
+ΓùÅ 
+Below that: 2-column layout ΓÇö Left: Coupon code input + "Apply Coupon" button. Right: Cart Totals 
+summary box.
+ 
+ 
+Cart Totals Box 
+.cart-totals {
+ 
+  background: var(--color-card-bg);
+ 
+  border: 1px solid var(--color-border);
+ 
+
+  border-radius: var(--radius-md);
+ 
+  padding: 2rem;
+ 
+}
+ 
+.cart-totals__row { display: flex; justify-content: space-between; padding: 0.75rem 0; 
+border-bottom: 1px solid var(--color-border); }
+ 
+.cart-totals__total { font-size: var(--text-xl); font-weight: 700; color: 
+var(--color-primary); }
+ 
+.checkout-btn { width: 100%; margin-top: 1.5rem; } /* Same style as .btn-discover */
+ 
+ 
+ 
+C.5 ΓÇö Checkout Page 
+Layout ΓÇö 2-Column 
+ΓùÅ 
+LEFT (60%): Checkout form ΓÇö Billing Details section (First Name, Last Name, Country, Address, City, State, 
+ZIP, Phone, Email). Each input has a visible label above it, not placeholder-only. Section heading "Billing 
+Details" in H3.
+ 
+ΓùÅ 
+RIGHT (40%): Order Summary box. Lists each product (image thumbnail, name, quantity ├ù price). Shows 
+Cart Subtotal, Shipping, Grand Total. "Place Order" button ΓÇö full-width orange pill CTA.
+ 
+ 
+Form Input Style 
+.form-group { margin-bottom: 1.25rem; }
+ 
+.form-label { display: block; font-size: var(--text-sm); font-weight: 600; color: 
+var(--color-text-dark); margin-bottom: 0.4rem; }
+ 
+.form-input {
+ 
+  width: 100%;
+ 
+  padding: 0.875rem 1rem;
+ 
+  border: 1.5px solid var(--color-border);
+ 
+  border-radius: var(--radius-sm);
+ 
+  font-size: var(--text-base);
+ 
+  transition: border-color 0.2s, box-shadow 0.2s;
+ 
+  background: var(--color-card-bg);
+ 
+}
+ 
+.form-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px 
+rgba(255,107,53,0.15); outline: none; }
+ 
+ 
+Order Success / Thank You Page 
+ΓùÅ 
+Centered card layout on a light background. 
+ΓùÅ 
+Large green checkmark icon at top (animated scale-in on load: keyframe from scale(0) to scale(1), 
+cubic-bezier bounce).
+ 
+ΓùÅ 
+H2: "Thank you. Your order has been received." 
+ΓùÅ 
+4 info pills in a row: Order number, Date, Email, Total, Payment method. 
+ΓùÅ 
+Order details table: lists ordered products. 
+ΓùÅ 
+"Continue Shopping" CTA button. 
+
+.success-check { animation: checkIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 
+forwards; }
+ 
+@keyframes checkIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); 
+opacity: 1; } }
+ 
+ 
+ 
+C.6 ΓÇö Wishlist Page 
+ΓùÅ 
+Full-width table layout. Columns: Remove (├ù), Product Image, Product Name, Unit Price, Stock Status, "Add 
+to Cart" button.
+ 
+ΓùÅ 
+Each row has the product image (60├ù60 thumbnail), product name link, price, "In stock" badge (green), 
+and a solid "Add to Cart" orange button.
+ 
+ΓùÅ 
+Empty state: centered icon + "No products in your wishlist" message + "Continue Shopping" button. 
+ 
+ 
+C.7 ΓÇö Blog: Portfolio 3 Columns Layout 
+Page Architecture 
+ΓùÅ 
+Full-page, NO sidebar. Header banner + breadcrumb identical to Shop page. 
+ΓùÅ 
+Grid: 3 equal-width columns, uniform gutters (gap: 2rem). 
+ΓùÅ 
+Pagination at the bottom, centered. 
+ 
+Portfolio Blog Card Anatomy 
+Each card in this layout is a full-bleed image card ΓÇö the image fills the entire card, and the metadata overlays on 
+top of the image from the bottom on hover. This is the "portfolio" style distinct from standard blog cards.
+ 
+ΓùÅ 
+Default state: Image (3:2 ratio, full bleed, border-radius on container). No text overlay ΓÇö only a minimal 
+bottom bar showing category + date.
+ 
+ΓùÅ 
+Hover state: A dark gradient overlay slides up from the bottom. Post title and "read more" arrow appear 
+over it. Image scales to 1.05.
+ 
+ΓùÅ 
+Card has rounded corners (--radius-lg) and overflow: hidden. 
+ 
+Portfolio Card CSS 
+.portfolio-card {
+ 
+  position: relative;
+ 
+  border-radius: var(--radius-lg);
+ 
+  overflow: hidden;
+ 
+  aspect-ratio: 3/2;
+ 
+  cursor: pointer;
+ 
+}
+ 
+
+.portfolio-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 
+0.5s ease; }
+ 
+.portfolio-card:hover img { transform: scale(1.05); }
+ 
+.portfolio-card__meta {
+ 
+  position: absolute;
+ 
+  bottom: 0; left: 0; right: 0;
+ 
+  padding: 1.5rem;
+ 
+  background: linear-gradient(transparent, rgba(26,26,46,0.95));
+ 
+  transform: translateY(60px);
+ 
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+ 
+}
+ 
+.portfolio-card:hover .portfolio-card__meta { transform: translateY(0); }
+ 
+.portfolio-card__category { font-size: var(--text-xs); text-transform: uppercase; 
+letter-spacing: 0.1em; color: var(--color-secondary); font-weight: 700; }
+ 
+.portfolio-card__title { color: white; font-size: var(--text-lg); font-weight: 700; 
+margin-top: 0.25rem; }
+ 
+.portfolio-card__date { color: rgba(255,255,255,0.6); font-size: var(--text-sm); 
+margin-top: 0.25rem; }
+ 
+ 
+ 
+C.8 ΓÇö Contact Page 
+Page Layout Overview 
+ΓùÅ 
+2-column layout: Left = decorative image + floating graphic shapes, Right = contact form. 
+ΓùÅ 
+Background: Warm off-white. Floating decorative shapes (plus signs, circles in brand colors) are absolutely 
+positioned.
+ 
+ΓùÅ 
+Section pre-label: "Contact Us" in small uppercase orange text. 
+ΓùÅ 
+H1: "Have Questions? Get in touch!" 
+ 
+Left Column 
+ΓùÅ 
+A large creative/character illustration image. 
+ΓùÅ 
+Overlaid floating shapes: 2├ù plus/cross SVGs, 2├ù circle outlines ΓÇö different sizes, positioned at corners of 
+the image container.
+ 
+ 
+Right Column ΓÇö Contact Form 
+ΓùÅ 
+Full-name input (single field or two side-by-side). 
+ΓùÅ 
+Email address input. 
+ΓùÅ 
+Message textarea (min-height: 160px, resize: vertical). 
+ΓùÅ 
+GDPR checkbox: "I agree that my submitted data is being collected and stored." 
+ΓùÅ 
+Submit button: "Send Message" ΓÇö full-width or auto-width orange pill button. 
+ 
+
+Below Form ΓÇö Contact Details Row 
+ΓùÅ 
+3-item horizontal row: Address ("785 15h Street, Office 478"), Email (info@email.com), Phone (+1 840 841 
+25 69).
+ 
+ΓùÅ 
+Each item has an icon (map pin, envelope, phone) in a small orange circle badge before the text. 
+ΓùÅ 
+Social links row at the bottom of the section. 
+ 
+Contact Icon Badge 
+.contact-icon { width: 44px; height: 44px; background: var(--color-primary); 
+border-radius: 50%; display: flex; align-items: center; justify-content: center; color: 
+white; flex-shrink: 0; }
+ 
+.contact-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; 
+}
+ 
+ 
+ 
+D. Animation & Interaction Guide 
+All animations on the AmarToy site serve a single purpose: to make the experience feel playful and alive, 
+consistent with a toy brand. They are generally not long or aggressive ΓÇö quick, springy, and delightful. Below is a 
+complete catalog of every animation type and the exact CSS/JS needed to reproduce it.
+ 
+ 
+D.1 ΓÇö Scroll-Triggered Reveal Animations 
+Elements animate in as they enter the viewport. Use the Intersection Observer API to add an .animate-in class 
+when an element reaches the viewport. All animatable elements start with opacity: 0 and a translateY offset.
+ 
+ 
+Base Utility Classes 
+/* All elements that animate should have this class by default */
+ 
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.6s ease, 
+transform 0.6s ease; }
+ 
+.reveal.visible { opacity: 1; transform: translateY(0); }
+ 
+ 
+/* Staggered children ΓÇö add delay via CSS custom property */
+ 
+.reveal-delay-1 { transition-delay: 0.1s; }
+ 
+.reveal-delay-2 { transition-delay: 0.2s; }
+ 
+.reveal-delay-3 { transition-delay: 0.3s; }
+ 
+.reveal-delay-4 { transition-delay: 0.4s; }
+ 
+ 
+Intersection Observer JS 
+const revealObserver = new IntersectionObserver((entries) => {
+ 
+  entries.forEach(entry => {
+ 
+    if (entry.isIntersecting) {
+ 
+
+      entry.target.classList.add('visible');
+ 
+      revealObserver.unobserve(entry.target); // animate once
+ 
+    }
+ 
+  });
+ 
+}, { threshold: 0.15 });
+ 
+ 
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+ 
+ 
+D.2 ΓÇö Hero Slide Entrance Animations 
+When a hero slide becomes active, its text elements animate in sequentially. This creates the "content flying in" 
+effect visible on the reference site.
+ 
+ 
+Slide Text Animation Classes 
+.slide-label { animation: slideUp 0.5s 0.1s ease forwards; opacity: 0; }
+ 
+.slide-title { animation: slideUp 0.6s 0.25s ease forwards; opacity: 0; }
+ 
+.slide-desc  { animation: slideUp 0.6s 0.4s ease forwards; opacity: 0; }
+ 
+.slide-cta   { animation: slideUp 0.5s 0.55s ease forwards; opacity: 0; }
+ 
+.slide-char  { animation: slideInRight 0.7s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 
+forwards; opacity: 0; }
+ 
+ 
+@keyframes slideUp {
+ 
+  from { transform: translateY(30px); opacity: 0; }
+ 
+  to   { transform: translateY(0);    opacity: 1; }
+ 
+}
+ 
+@keyframes slideInRight {
+ 
+  from { transform: translateX(60px); opacity: 0; }
+ 
+  to   { transform: translateX(0);    opacity: 1; }
+ 
+}
+ 
+ 
+Floating Star Animation in Hero 
+.hero-star { animation: starFloat var(--dur, 4s) var(--delay, 0s) ease-in-out infinite 
+alternate; }
+ 
+@keyframes starFloat {
+ 
+  from { transform: translateY(0) rotate(0deg); }
+ 
+  to   { transform: translateY(-12px) rotate(15deg); }
+ 
+}
+ 
+Apply different --dur (3sΓÇô6s) and --delay (0ΓÇô2s) values per star element via inline style attributes. 
+ 
+D.3 ΓÇö Button Hover Effects 
+Primary CTA Button (.btn-primary) 
+.btn-primary { transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s 
+ease; }
+ 
+
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 36px 
+rgba(255,107,53,0.45); }
+ 
+.btn-primary:active { transform: translateY(-1px) scale(0.98); }
+ 
+ 
+Icon Buttons (Cart, Search, Wishlist) 
+.icon-btn { transition: color 0.2s, transform 0.2s; }
+ 
+.icon-btn:hover { color: var(--color-primary); transform: scale(1.15); }
+ 
+ 
+D.4 ΓÇö Card Hover Effects 
+Product Card 
+/* lift + shadow increase ΓÇö see C.2 for full code */
+ 
+.product-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+ 
+.product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+ 
+ 
+Category Card ΓÇö Image Zoom + Gradient Reveal 
+See C.1.2 for complete CSS. The overlay gradient opacity transitions from 0 to 1 on hover, while the image 
+simultaneously scales from 1 to 1.06 ΓÇö giving a rich parallax-like reveal effect.
+ 
+ 
+Blog Portfolio Card ΓÇö Meta Slide Up 
+See C.7 for complete CSS. The metadata panel (title, date, category) is translated 60px below the card bottom by 
+default. On hover, it translates to Y(0), making it visible over the gradient overlay.
+ 
+ 
+D.5 ΓÇö Page Load Animation 
+On initial page load, the header, hero content, and above-the-fold elements animate in. This is achieved by 
+adding a "page-loaded" class to <body> after 100ms, which triggers CSS transitions on pre-animated elements.
+ 
+window.addEventListener('load', () => {
+ 
+  setTimeout(() => document.body.classList.add('page-loaded'), 100);
+ 
+});
+ 
+ 
+.site-header { opacity: 0; transform: translateY(-20px); transition: opacity 0.5s ease, 
+transform 0.5s ease; }
+ 
+.page-loaded .site-header { opacity: 1; transform: translateY(0); }
+ 
+ 
+D.6 ΓÇö Number Counter Animation (Stats Section) 
+In the About section, stat numbers (e.g., "5000+ Happy Kids") animate from 0 to their target value when scrolled 
+into view.
+ 
+function animateCounter(el) {
+ 
+  const target = parseInt(el.dataset.target);
+ 
+
+  const duration = 1800;
+ 
+  const start = performance.now();
+ 
+  function update(time) {
+ 
+    const progress = Math.min((time - start) / duration, 1);
+ 
+    const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+ 
+    el.textContent = Math.floor(ease * target).toLocaleString() + '+';
+ 
+    if (progress < 1) requestAnimationFrame(update);
+ 
+  }
+ 
+  requestAnimationFrame(update);
+ 
+}
+ 
+ 
+D.7 ΓÇö Form Focus / Input Animation 
+.form-input { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+ 
+.form-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px 
+rgba(255,107,53,0.12); }
+ 
+.form-label { transition: color 0.2s ease; }
+ 
+.form-group:focus-within .form-label { color: var(--color-primary); }
+ 
+ 
+D.8 ΓÇö Add to Cart / Wishlist Feedback Animation 
+Cart Button ΓÇö Bounce on Click 
+.btn-add-cart.clicked { animation: cartBounce 0.4s ease; }
+ 
+@keyframes cartBounce {
+ 
+  0%  { transform: scale(1); }
+ 
+  40% { transform: scale(0.9); }
+ 
+  70% { transform: scale(1.1); }
+ 
+  100%{ transform: scale(1); }
+ 
+}
+ 
+ 
+Wishlist Heart ΓÇö Fill Animation 
+.wishlist-icon { transition: color 0.2s, transform 0.2s; }
+ 
+.wishlist-icon.active { color: var(--color-accent-pink); transform: scale(1.2); }
+ 
+.wishlist-icon:hover { transform: scale(1.25); }
+ 
+ 
+ 
+ 
+
+E. Tech Stack & Step-by-Step Execution Strategy 
+ 
+E.1 ΓÇö Recommended Tech Stack 
+Option A ΓÇö React / Next.js (Recommended for Production) 
+ΓùÅ 
+Framework: Next.js 14+ (App Router). Handles routing, SSR for product pages, and SEO out of the box. 
+ΓùÅ 
+Styling: Tailwind CSS + CSS Modules for component-specific styles. Tailwind for utility classes, CSS Modules 
+for complex animations and component-level specificity.
+ 
+ΓùÅ 
+Slider/Carousel: Swiper.js (https://swiperjs.com) ΓÇö supports autoplay, fade, thumbnails, and is highly 
+customizable. Used for Hero, Product Gallery, and Testimonials.
+ 
+ΓùÅ 
+Animations: Framer Motion (npm install framer-motion) for page transitions and entrance animations. CSS 
+animations for repeating effects (floats, pulses).
+ 
+ΓùÅ 
+Icons: Lucide React or React Icons (for cart, wishlist, search, social icons). 
+ΓùÅ 
+State Management: Zustand (lightweight) or React Context for cart and wishlist state. 
+ΓùÅ 
+Forms: React Hook Form + Zod for checkout and contact form validation. 
+ 
+Option B ΓÇö Plain HTML/CSS/JS (Simpler Build) 
+ΓùÅ 
+HTML: Semantic HTML5 with BEM CSS class naming convention. 
+ΓùÅ 
+CSS: Custom Properties (variables), Flexbox + CSS Grid, no framework needed. 
+ΓùÅ 
+Slider: Swiper.js (vanilla JS version). 
+ΓùÅ 
+Animations: Pure CSS + Intersection Observer API (no library required). 
+ΓùÅ 
+Icons: SVG sprites or Font Awesome 6 Free. 
+ 
+Shared Dependencies (Both Options) 
+/* Google Fonts */
+ 
+@import 
+url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nuni
+to+Sans:wght@400;600&display=swap');
+ 
+ 
+/* Swiper.js (via CDN or npm) */
+ 
+<link rel="stylesheet" 
+href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+ 
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+ 
+ 
+ 
+E.2 ΓÇö Project Folder Architecture 
+Use the following folder structure for a clean, scalable codebase: 
+
+ 
+/src
+ 
+  /styles
+ 
+    tokens.css        ΓåÉ All CSS custom properties (colors, fonts, spacing)
+ 
+    reset.css         ΓåÉ Normalize + box-sizing reset
+ 
+    global.css        ΓåÉ Body, typography base styles
+ 
+    animations.css    ΓåÉ All @keyframes
+ 
+  /components
+ 
+    /layout
+ 
+      Header.jsx      ΓåÉ Sticky header + nav + icons
+ 
+      Footer.jsx      ΓåÉ 4-col footer + newsletter
+ 
+      SidePanel.jsx   ΓåÉ Right info panel
+ 
+      SearchOverlay.jsx
+ 
+      FloatingChat.jsx
+ 
+    /ui
+ 
+      Button.jsx      ΓåÉ Primary, Secondary, Outlined variants
+ 
+      ProductCard.jsx
+ 
+      CategoryCard.jsx
+ 
+      PortfolioBlogCard.jsx
+ 
+      QuantityStepper.jsx
+ 
+      Badge.jsx
+ 
+    /sections
+ 
+      HeroSlider.jsx
+ 
+      CategoriesSection.jsx
+ 
+      ProductGrid.jsx
+ 
+      FeaturesStrip.jsx
+ 
+      TestimonialsSlider.jsx
+ 
+      BlogSection.jsx
+ 
+      BrandMarquee.jsx
+ 
+  /pages
+ 
+    index.jsx         ΓåÉ Home 1
+ 
+    shop.jsx
+ 
+    product/[slug].jsx
+ 
+    cart.jsx
+ 
+    checkout.jsx
+ 
+    order-success.jsx
+ 
+    wishlist.jsx
+ 
+    blog-portfolio-3-cols.jsx
+ 
+    contact.jsx
+ 
+ 
+ 
+E.3 ΓÇö Step-by-Step Execution Order 
+Follow this sequence strictly. Skipping steps creates compounding issues. 
+ 
+Phase 1 ΓÇö Foundation (Day 1ΓÇô2) 
+17. 
+Set up project: npx create-next-app@latest amartoy (or plain HTML boilerplate). 
+
+18. 
+Create tokens.css with all CSS custom properties from Section A. Import it globally. 
+19. 
+Create reset.css and apply box-sizing: border-box, margin: 0, body font defaults. 
+20. 
+Set up Google Fonts import in _document.js or <head>. 
+21. 
+Create animations.css with all @keyframes. 
+22. 
+Create the .container class and breakpoint utilities. 
+ 
+Phase 2 ΓÇö Global Shell (Day 2ΓÇô4) 
+23. 
+Build Header component: Logo, nav links with dropdowns, 3 icon buttons. Wire scroll behavior. 
+24. 
+Build SidePanel component: dark overlay + panel slide-in. Wire to header icon. 
+25. 
+Build SearchOverlay component. 
+26. 
+Build Footer component. 
+27. 
+Build FloatingChat widget. 
+28. 
+Test all global components on a blank page. Verify responsive behavior at all breakpoints. 
+ 
+Phase 3 ΓÇö Reusable UI Components (Day 4ΓÇô6) 
+29. 
+Build Button component with all variants (primary, secondary, outlined, icon-only). 
+30. 
+Build ProductCard component (image, wishlist, sale badge, name, price, buy button). 
+31. 
+Build CategoryCard component (image zoom, gradient overlay). 
+32. 
+Build PortfolioBlogCard component (meta slide-up overlay). 
+33. 
+Build QuantityStepper component. 
+34. 
+Build Badge component (sale, stock, category label). 
+35. 
+Test all components in a Storybook or isolated page. 
+ 
+Phase 4 ΓÇö Home Page (Day 6ΓÇô9) 
+36. 
+Build HeroSlider with Swiper.js. Implement 3 slides, autoplay, decorative stars/clouds. 
+37. 
+Build CategoriesSection: 4-column grid + animate on scroll. 
+38. 
+Build first ProductGrid (4 items, "Popular in Store"). 
+39. 
+Build About section: split layout, overlapping images, floating badge. 
+40. 
+Build second ProductGrid (8 items). 
+41. 
+Build FeaturesStrip (4 icons). 
+42. 
+Build Video section with play button pulse animation. 
+43. 
+Build TestimonialsSlider with Swiper.js. 
+44. 
+Build Blog preview section (4 posts). 
+45. 
+Build BrandMarquee with CSS animation. 
+46. 
+Wire all Intersection Observer animations. 
+ 
+
+Phase 5 ΓÇö Shop & E-Commerce Pages (Day 9ΓÇô14) 
+47. 
+Build Shop page: sidebar + 3-col product grid + sort dropdown + pagination. 
+48. 
+Build Product Single page: gallery with thumbnails + details panel + tabs + related products. 
+49. 
+Build Cart page: table + totals box + coupon input. 
+50. 
+Build Checkout page: form + order summary box. 
+51. 
+Build Order Success page: animated checkmark + order info. 
+52. 
+Build Wishlist page: table layout. 
+ 
+Phase 6 ΓÇö Blog & Contact (Day 14ΓÇô16) 
+53. 
+Build Blog Portfolio 3-Columns page: full-width grid, portfolio cards. 
+54. 
+Build Contact page: 2-column split, floating shapes, form, contact details. 
+ 
+Phase 7 ΓÇö Polish & QA (Day 16ΓÇô18) 
+55. 
+Audit all pages at 320px, 375px, 768px, 1024px, 1280px, 1440px viewports. 
+56. 
+Test all hover states, animations, and transitions. 
+57. 
+Verify keyboard navigation (Tab, Enter on all interactive elements). 
+58. 
+Check color contrast ratios (WCAG AA ΓÇö minimum 4.5:1 for body text). 
+59. 
+Optimize images (WebP format, lazy loading with loading="lazy" on all images below the fold). 
+60. 
+Verify smooth scroll behavior and sticky header. 
+61. 
+Final cross-browser test: Chrome, Firefox, Safari, Edge. 
+ 
+ 
+E.4 ΓÇö Performance Considerations 
+ΓùÅ 
+Use next/image (or native lazy loading) for all product and blog images to avoid layout shift. 
+ΓùÅ 
+Load Swiper.js only on pages that use it (dynamic import in Next.js). 
+ΓùÅ 
+CSS animations use transform and opacity only ΓÇö never animate layout properties (width, height, top, left) 
+for 60fps performance.
+ 
+ΓùÅ 
+Use will-change: transform on elements that animate on every frame (hero character, floating shapes). 
+ΓùÅ 
+Preconnect to Google Fonts: <link rel="preconnect" href="https://fonts.googleapis.com">. 
+ΓùÅ 
+Use font-display: swap to avoid invisible text during font load. 
+ 
+E.5 ΓÇö Accessibility Checklist 
+ΓùÅ 
+All interactive elements have clear :focus-visible styles (orange outline with offset). 
+ΓùÅ 
+All images have descriptive alt attributes. 
+
+ΓùÅ 
+Navigation dropdowns are keyboard-accessible (arrow keys + Escape to close). 
+ΓùÅ 
+Side panel traps focus when open (focus-trap-react or manual tabindex management). 
+ΓùÅ 
+Cart count badge uses aria-label="X items in cart". 
+ΓùÅ 
+Wishlist heart uses aria-pressed="true/false" and aria-label. 
+ΓùÅ 
+Form inputs are connected to labels via htmlFor / for attributes (not just placeholder). 
+ΓùÅ 
+Color contrast for primary orange (#FF6B35) on white: approx 3.1:1 ΓÇö use for large text/icons only. For 
+body text always use #1C1C1C on white (21:1 ratio).
+ 
+ 
+ 
+ΓÇö End of AmarToy Front-End Implementation Master Plan ΓÇö 
+All sections (A through E) are intended to be used as a living blueprint. 

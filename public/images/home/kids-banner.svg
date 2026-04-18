@@ -1,0 +1,23 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="780" viewBox="0 0 1920 780" fill="none">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F7F6E5"/><stop offset="100%" stop-color="#E6F5FF"/></linearGradient></defs>
+  <rect width="1920" height="780" fill="url(#bg)"/>
+  <circle cx="260" cy="280" r="190" fill="rgba(255,255,255,0.18)"/><circle cx="1640" cy="220" r="150" fill="rgba(255,255,255,0.16)"/>
+  <g>
+    <circle cx="540" cy="280" r="96" fill="#FFD7B1"/>
+    <rect x="400" y="360" width="280" height="290" rx="120" fill="#F9C74F"/>
+    <rect x="250" y="420" width="130" height="240" rx="56" fill="#F4B183" transform="rotate(-16 250 420)"/>
+    <rect x="690" y="424" width="126" height="238" rx="56" fill="#F4B183" transform="rotate(14 690 424)"/>
+  </g>
+  <g>
+    <circle cx="1040" cy="250" r="104" fill="#FFD7B1"/>
+    <rect x="884" y="352" width="312" height="314" rx="134" fill="#F7DAD0"/>
+    <rect x="790" y="438" width="120" height="238" rx="54" fill="#F4B183" transform="rotate(-18 790 438)"/>
+    <rect x="1188" y="436" width="118" height="238" rx="54" fill="#F4B183" transform="rotate(18 1188 436)"/>
+  </g>
+  <g>
+    <circle cx="1462" cy="270" r="90" fill="#FFD7B1"/>
+    <rect x="1320" y="358" width="284" height="298" rx="126" fill="#F6C8C1"/>
+    <rect x="1244" y="442" width="102" height="220" rx="48" fill="#F4B183" transform="rotate(-14 1244 442)"/>
+    <rect x="1582" y="434" width="102" height="222" rx="48" fill="#F4B183" transform="rotate(14 1582 434)"/>
+  </g>
+</svg>
