@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, ChevronDown, Search, SlidersHorizontal } from "lucide-react";
 import clsx from "clsx";
 import { formatCurrency, products } from "@/data/site";
 import { useStore } from "@/components/providers/store-provider";
@@ -49,6 +49,19 @@ export default function ShopPage() {
     [categoryCounts],
   );
 
+  const categoryShowcases = useMemo(
+    () =>
+      categoryEntries.map(([category, count]) => ({
+        category,
+        count,
+        products: [...products]
+          .filter((product) => product.category === category)
+          .sort((left, right) => right.id - left.id)
+          .slice(0, 3),
+      })),
+    [categoryEntries],
+  );
+
   const filteredProducts = useMemo(() => {
     let filtered = products;
     if (deferredSearchQuery) {
@@ -71,6 +84,8 @@ export default function ShopPage() {
       sorted.sort((a, b) => b.price - a.price);
     } else if (sortBy === "popular") {
       sorted.sort((a, b) => b.rating - a.rating);
+    } else {
+      sorted.sort((a, b) => b.id - a.id);
     }
     return sorted;
   }, [filteredProducts, sortBy]);
@@ -94,6 +109,18 @@ export default function ShopPage() {
     setPriceMax(maxPrice);
   };
 
+  const showCategoryProducts = (category: string) => {
+    setSearchQuery("");
+    setSelectedCategory(category);
+    setSortBy("latest");
+    setCurrentPage(1);
+    setShowFilters(false);
+
+    if (typeof document !== "undefined") {
+      document.getElementById("shop-catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <section className="shop-page">
       <div className="container">
@@ -107,6 +134,14 @@ export default function ShopPage() {
 
         <div className="shop-page__layout" id="shop-catalog">
           <main className="shop-page__main">
+            <div className="shop-page__catalog-head">
+              <div>
+                <p className="shop-page__catalog-eyebrow">Latest</p>
+                <h2>Latest Products</h2>
+              </div>
+              <p>By default you will see the latest 12 products here.</p>
+            </div>
+
             <div className="shop-page__toolbar">
               <div className="shop-page__results">
                 <span>
@@ -170,6 +205,33 @@ export default function ShopPage() {
                 ))}
               </div>
             ) : null}
+
+            <div className="shop-page__category-showcases">
+              {categoryShowcases.map((showcase) => (
+                <section className="shop-page__category-section" key={showcase.category}>
+                  <div className="shop-page__category-section-head">
+                    <div>
+                      <p className="shop-page__catalog-eyebrow">{showcase.category}</p>
+                      <h3>{showcase.category}</h3>
+                    </div>
+                    <button
+                      className="shop-page__see-more"
+                      type="button"
+                      onClick={() => showCategoryProducts(showcase.category)}
+                    >
+                      See More Products
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+
+                  <div className="shop-page__grid shop-page__grid--showcase">
+                    {showcase.products.map((product) => (
+                      <ProductCard key={`${showcase.category}-${product.id}`} product={product} variant="shop" />
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
           </main>
 
           <aside className={clsx("shop-page__sidebar", showFilters && "is-open")} id="shop-filters">

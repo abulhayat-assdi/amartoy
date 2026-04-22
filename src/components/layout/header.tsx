@@ -69,12 +69,11 @@ export function Header({ onOpenSearch, onOpenPanel }: HeaderProps) {
           <div className="header-actions">
             <Link
               aria-label={isLoggedIn ? "Profile" : "Login"}
-              className="icon-btn icon-btn--profile"
+              className="header-signin"
               href={isLoggedIn ? "/profile/" : "/login/"}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, marginRight: 8 }}
             >
               <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
-              <span style={{ fontSize: 15 }}>{isLoggedIn ? "My Profile" : "Sign in"}</span>
+              <span>{isLoggedIn ? "Hello, My Profile" : "Hello, Sign in"}</span>
             </Link>
             <Link aria-label="View cart" className="icon-btn icon-btn--cart" href="/cart/">
               <ShoppingBag size={22} />

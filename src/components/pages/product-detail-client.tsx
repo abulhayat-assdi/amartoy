@@ -2,19 +2,47 @@
 
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { Heart, Search, ShoppingBag } from "lucide-react";
+import { Heart, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/data/site";
 import { useStore } from "@/components/providers/store-provider";
 import type { Product } from "@/types/site";
 
+interface ProductReview {
+  id: string;
+  author: string;
+  text: string;
+}
+
 export function ProductDetailClient({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
+  const [activeReviewIndex, setActiveReviewIndex] = useState(0);
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewText, setReviewText] = useState("");
   const { addToCart, toggleWishlist, wishlist } = useStore();
 
   const active = wishlist.includes(product.id);
+  const initialReviews: ProductReview[] = [
+    {
+      id: `${product.id}-review-1`,
+      author: "Nusrat J.",
+      text: `My child loved the ${product.name} right away. The quality feels premium and it looks exactly like the photos.`,
+    },
+    {
+      id: `${product.id}-review-2`,
+      author: "Rahim A.",
+      text: `Delivery was smooth and the ${product.name} feels sturdy enough for everyday play. খুব সুন্দর একটা product.`,
+    },
+    {
+      id: `${product.id}-review-3`,
+      author: "Sadia K.",
+      text: `This product page made it easy to choose, and the toy itself kept my kid engaged for a long time.`,
+    },
+  ];
+  const [reviews, setReviews] = useState<ProductReview[]>(initialReviews);
   const mediaItems =
     product.media && product.media.length
       ? product.media.slice(0, 4)
@@ -30,6 +58,14 @@ export function ProductDetailClient({ product }: { product: Product }) {
   }, [product.id]);
 
   useEffect(() => {
+    setReviews(initialReviews);
+    setActiveReviewIndex(0);
+    setIsReviewFormOpen(false);
+    setReviewName("");
+    setReviewText("");
+  }, [product.id]);
+
+  useEffect(() => {
     if (mediaItems.length < 2) {
       return undefined;
     }
@@ -40,6 +76,44 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
     return () => window.clearInterval(intervalId);
   }, [mediaItems.length]);
+
+  useEffect(() => {
+    if (reviews.length < 2 || activeTab !== "reviews") {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setActiveReviewIndex((currentIndex) => (currentIndex + 1) % reviews.length);
+    }, 4000);
+
+    return () => window.clearInterval(intervalId);
+  }, [activeTab, reviews.length]);
+
+  const activeReview = reviews[activeReviewIndex] ?? reviews[0];
+
+  const handleReviewSubmit = () => {
+    const author = reviewName.trim();
+    const text = reviewText.trim();
+
+    if (!author || !text) {
+      return;
+    }
+
+    const nextReviews = [
+      ...reviews,
+      {
+        id: `${product.id}-review-${Date.now()}`,
+        author,
+        text,
+      },
+    ];
+
+    setReviews(nextReviews);
+    setActiveReviewIndex(nextReviews.length - 1);
+    setReviewName("");
+    setReviewText("");
+    setIsReviewFormOpen(false);
+  };
 
   return (
     <div className="product-detail">
@@ -77,9 +151,6 @@ export function ProductDetailClient({ product }: { product: Product }) {
             ))}
           </div>
           <div className="product-gallery__main">
-            <button className="product-gallery__zoom" type="button" aria-label="Preview current image">
-              <Search size={18} />
-            </button>
             {activeMedia.type === "video" ? (
               <video
                 className="product-gallery__media"
@@ -131,8 +202,6 @@ export function ProductDetailClient({ product }: { product: Product }) {
           {active ? "Added to Wishlist" : "Add to Wishlist"}
         </button>
         <div className="product-meta">
-          <span>Category: {product.category}</span>
-          <span>Tags: {product.tags.join(", ")}</span>
           <span>Product ID: {product.sku}</span>
         </div>
 
@@ -159,10 +228,63 @@ export function ProductDetailClient({ product }: { product: Product }) {
               edges, premium spacing, and a product detail layout built for conversion.
             </p>
           ) : (
-            <p>
-              "My child loved it immediately." "Premium look, quick checkout, and lovely
-              packaging." "The page feels clean and easy to trust."
-            </p>
+            <div className="product-reviews">
+              <div className="product-reviews__header">
+                <div className="product-reviews__count">
+                  <strong>{reviews.length} Reviews</strong>
+                  <span>Auto-changing every 4 seconds</span>
+                </div>
+                <Button
+                  className="product-reviews__button"
+                  variant="outline"
+                  onClick={() => setIsReviewFormOpen((current) => !current)}
+                >
+                  Give Review
+                </Button>
+              </div>
+
+              <div className="product-review-card">
+                <strong>{activeReview.author}</strong>
+                <p>{activeReview.text}</p>
+              </div>
+
+              <div className="product-reviews__dots" aria-label="Review navigation">
+                {reviews.map((review, index) => (
+                  <button
+                    key={review.id}
+                    className={clsx(
+                      "product-reviews__dot",
+                      index === activeReviewIndex && "is-active",
+                    )}
+                    type="button"
+                    aria-label={`Show review ${index + 1}`}
+                    onClick={() => setActiveReviewIndex(index)}
+                  />
+                ))}
+              </div>
+
+              {isReviewFormOpen ? (
+                <div className="product-review-form">
+                  <input
+                    className="product-review-form__input"
+                    placeholder="Your name"
+                    type="text"
+                    value={reviewName}
+                    onChange={(event) => setReviewName(event.target.value)}
+                  />
+                  <textarea
+                    className="product-review-form__textarea"
+                    placeholder="Write your review"
+                    rows={4}
+                    value={reviewText}
+                    onChange={(event) => setReviewText(event.target.value)}
+                  />
+                  <div className="product-review-form__actions">
+                    <Button onClick={handleReviewSubmit}>Submit Review</Button>
+                  </div>
+                </div>
+              ) : null}
+            </div>
           )}
         </div>
       </div>

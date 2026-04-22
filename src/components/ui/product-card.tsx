@@ -62,9 +62,13 @@ export function ProductCard({ product, variant = "default" }: ProductCardProps) 
             >
               <ShoppingBag size={16} />
             </button>
-            <span className="product-card__action-bubble product-card__action-bubble--link">
+            <Link
+              className="product-card__action-bubble product-card__action-bubble--link"
+              href={`/product/${product.slug}/`}
+              aria-label={`Go to ${product.name} details`}
+            >
               <ArrowRight size={16} />
-            </span>
+            </Link>
           </div>
         </div>
         <div className="product-card__body">

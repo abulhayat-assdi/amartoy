@@ -1,13 +1,17 @@
-import type { NavigationItem, Product, ProductMedia } from "@/types/site";
+import type { NavigationItem, Product, ProductMedia, ReviewMediaItem } from "@/types/site";
 
 export const company = {
   name: "AmarToy",
   phone: "+1 840 841 25 69",
+  secondaryPhone: "+1 840 841 25 70",
   email: "hello@amartoy.com",
   supportEmail: "support@amartoy.com",
   address: "785 15h Street, Office 478, Berlin, DE 81566",
   shortAddress: "785 15h Street, Office 478",
   city: "Berlin, DE 81566",
+  website: "https://amartoy.com",
+  developerName: "Abul Hayat",
+  developerUrl: "https://facebook.com",
   mapEmbed:
     "https://www.google.com/maps?q=785%2015h%20Street%20Office%20478%20Berlin&output=embed",
 };
@@ -203,6 +207,21 @@ export const blogPosts = [
     image: "/images/real/happy-outdoors.jpg",
     excerpt:
       "Ideas for keeping kids active, social, and delightfully engaged through creative play.",
+    author: "Cloe Brooks",
+    authorImage: "/images/team/team-1.svg",
+    intro:
+      "Proin faucibus nec mauris a sodales, sed elementum mi tincidunt. Sed eget viverra egestas nisi in consequat.",
+    paragraphs: [
+      "Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.",
+      "Ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.",
+      "Aenean et egestas nulla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce gravida, ligula non molestie tristique, justo elit blandit risus, blandit maximus augue magna accumsan ante.",
+      "Etiam vitae leo et diam pellentesque porta. Sed eleifend ultricies risus, vel rutrum erat commodo ut. Praesent finibus congue euismod. Nullam scelerisque massa vel augue placerat, a tempor sem egestas.",
+    ],
+    quote:
+      "Curabitur varius eros et lacus rutrum consequat. Mauris sollicitudin enim condimentum, luctus justo non, molestie nisl.",
+    detailImage: "/images/real/kids-playroom.jpg",
+    tags: ["Article", "Featured", "Style 1"],
+    likes: 1,
   },
   {
     id: 2,
@@ -213,6 +232,21 @@ export const blogPosts = [
     image: "/images/real/playroom-toys.jpg",
     excerpt:
       "How thoughtful product curation and store structure can lower decision fatigue for families.",
+    author: "Cloe Brooks",
+    authorImage: "/images/team/team-2.svg",
+    intro:
+      "Thoughtful layouts and clear buying cues can turn overwhelming shopping choices into a calmer family experience.",
+    paragraphs: [
+      "Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.",
+      "Curabitur eget leo at velit imperdiet varius. In eu ipsum vitae velit congue iaculis vitae at risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.",
+      "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras dapibus. Vivamus elementum semper nisi.",
+    ],
+    quote:
+      "Great family shopping experiences start when guidance is clear and every step feels less overwhelming.",
+    detailImage: "/images/real/headphones-boy.jpg",
+    tags: ["Article", "Parenting", "Guide"],
+    likes: 1,
   },
   {
     id: 3,
@@ -223,6 +257,21 @@ export const blogPosts = [
     image: "/images/real/toy-blocks.jpg",
     excerpt:
       "A quick guide to balancing sensory play, social growth, and age-appropriate milestones.",
+    author: "Cloe Brooks",
+    authorImage: "/images/team/team-3.svg",
+    intro:
+      "Choosing the right preschool program means balancing learning structure, creativity, and emotional growth.",
+    paragraphs: [
+      "Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.",
+      "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.",
+      "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.",
+      "Praesent ac massa at ligula laoreet iaculis. Nulla neque dolor, sagittis eget, iaculis quis, molestie non, velit.",
+    ],
+    quote:
+      "A strong preschool fit supports curiosity, social confidence, and everyday joy in learning.",
+    detailImage: "/images/real/toy-blocks.jpg",
+    tags: ["Article", "Learning", "Featured"],
+    likes: 1,
   },
   {
     id: 4,
@@ -233,6 +282,21 @@ export const blogPosts = [
     image: "/images/blog/blog-4.svg",
     excerpt:
       "Why premium materials, rounded forms, and color psychology matter in contemporary toy design.",
+    author: "Cloe Brooks",
+    authorImage: "/images/team/team-1.svg",
+    intro:
+      "Proin faucibus nec mauris a sodales, sed elementum mi tincidunt. Sed eget viverra egestas nisi in consequat. Fusce sodales augue a accumsan. Cras sollicitudin, ipsum eget blandit pulvinar. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.",
+    paragraphs: [
+      "Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.",
+      "Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.",
+      "Aenean et egestas nulla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce gravida, ligula non molestie tristique, justo elit blandit risus, blandit maximus augue magna accumsan ante. Duis id mi tristique, pulvinar neque at, lobortis tortor.",
+      "Etiam vitae leo et diam pellentesque porta. Sed eleifend ultricies risus, vel rutrum erat commodo ut. Praesent finibus congue euismod. Nullam scelerisque massa vel augue placerat, a tempor sem egestas. Curabitur placerat finibus lacus.",
+    ],
+    quote:
+      "Curabitur varius eros et lacus rutrum consequat. Mauris sollicitudin enim condimentum, luctus justo non, molestie nisl.",
+    detailImage: "/images/real/kids-playroom.jpg",
+    tags: ["Article", "Featured", "Style 1"],
+    likes: 1,
   },
   {
     id: 5,
@@ -243,6 +307,21 @@ export const blogPosts = [
     image: "/images/blog/blog-5.svg",
     excerpt:
       "A playful selection of crowd-pleasers for birthdays, family visits, and surprise moments.",
+    author: "Cloe Brooks",
+    authorImage: "/images/team/team-4.svg",
+    intro:
+      "Holiday toy gifting works best when usefulness, delight, and age-fit come together in one thoughtful pick.",
+    paragraphs: [
+      "Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.",
+      "Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris.",
+      "Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero.",
+      "Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt.",
+    ],
+    quote:
+      "The best gift ideas feel exciting at first glance and stay meaningful long after the wrapping comes off.",
+    detailImage: "/images/real/baby-blocks.jpg",
+    tags: ["Article", "Toys", "Guide"],
+    likes: 1,
   },
   {
     id: 6,
@@ -253,6 +332,21 @@ export const blogPosts = [
     image: "/images/blog/blog-6.svg",
     excerpt:
       "A baby-safe buying checklist covering materials, scale, sensory feedback, and ease of cleaning.",
+    author: "Cloe Brooks",
+    authorImage: "/images/team/team-2.svg",
+    intro:
+      "Safe infant toy choices come down to soft edges, washable materials, sensory variety, and the right scale.",
+    paragraphs: [
+      "Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.",
+      "Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.",
+      "Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet.",
+      "Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus.",
+    ],
+    quote:
+      "A baby-safe toy should feel gentle, clean easily, and invite exploration without creating extra risk.",
+    detailImage: "/images/real/baby-blocks.jpg",
+    tags: ["Article", "Safety", "Featured"],
+    likes: 1,
   },
 ];
 
@@ -557,6 +651,50 @@ const baseProducts: Product[] = [
   },
 ];
 
+export const reviewMediaItems: ReviewMediaItem[] = [
+  {
+    id: 1,
+    type: "image",
+    src: "/images/real/happy-outdoors.jpg",
+    title: "Outdoor play moments that feel joyful and free",
+    description: "A bright customer story from families enjoying AmarToy picks during an outdoor afternoon.",
+    author: "Rafiqul Islam",
+  },
+  {
+    id: 2,
+    type: "image",
+    src: "/images/real/kids-playroom.jpg",
+    title: "A playroom setup packed with imagination",
+    description: "Parents shared how these toys helped create a calmer and more creative home play corner.",
+    author: "Nusrat Jahan",
+  },
+  {
+    id: 3,
+    type: "image",
+    src: "/images/real/toy-blocks.jpg",
+    title: "Learning toys that keep children engaged longer",
+    description: "Blocks, sorting, and hands-on discovery in one customer-favorite learning collection.",
+    author: "Sadia Rahman",
+  },
+  {
+    id: 4,
+    type: "image",
+    src: "/images/real/headphones-boy.jpg",
+    title: "Interactive favorites that kids return to every day",
+    description: "A review highlight showing how playful tech-inspired toys stay exciting over time.",
+    author: "Mahin Ahmed",
+  },
+  {
+    id: 5,
+    type: "video",
+    src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    poster: "/images/real/playroom-toys.jpg",
+    title: "Short customer video review",
+    description: "Sample video-ready slide. Replace this URL with your own uploaded review video any time.",
+    author: "Demo Review",
+  },
+];
+
 export const products: Product[] = baseProducts.map((product) => ({
   ...product,
   media: (product.media && product.media.length ? product.media : buildDefaultMedia(product)).slice(0, 4),
@@ -604,10 +742,15 @@ export function getProductBySlug(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug);
 }
 
+export function getBlogPostBySlug(slug: string) {
+  return blogPosts.find((post) => post.slug === slug);
+}
+
 export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
+  const formattedNumber = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(value);
+
+  return `৳${formattedNumber}`;
 }

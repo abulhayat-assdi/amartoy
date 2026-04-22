@@ -52,7 +52,7 @@ export function SearchOverlay({ open, onClose, products, posts }: SearchOverlayP
       .slice(0, 3)
       .map((post) => ({
         label: post.title,
-        href: "/blog/",
+        href: `/blog/${post.slug}/`,
         type: "Article" as const,
       }));
 

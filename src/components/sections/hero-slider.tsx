@@ -11,7 +11,7 @@ export function HeroSlider() {
   return (
     <section className="hero-slider">
       <Swiper
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
         effect="fade"
         loop
         modules={[Autoplay, EffectFade, Pagination]}

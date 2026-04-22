@@ -4,13 +4,14 @@ import {
   ArrowRight,
   BadgeDollarSign,
   CircleHelp,
-  Heart,
   PackageCheck,
   ShieldCheck,
   ShoppingBag,
 } from "lucide-react";
 import { blogPosts, categories, features, formatCurrency, products } from "@/data/site";
 import { ProductCard } from "@/components/ui/product-card";
+import { HeroSlider } from "@/components/sections/hero-slider";
+import { ReviewMediaCarousel } from "@/components/sections/review-media-carousel";
 
 const featuredProducts = products.slice(0, 8);
 const featuredPosts = [blogPosts[2], blogPosts[0], blogPosts[3]];
@@ -20,40 +21,7 @@ const featureIcons = [BadgeDollarSign, PackageCheck, ShoppingBag, CircleHelp];
 export default function HomePage() {
   return (
     <>
-      <section className="home-hero">
-        <div className="home-hero__sky" />
-        <div className="home-hero__stars" />
-        <div className="home-hero__cloud home-hero__cloud--one" />
-        <div className="home-hero__cloud home-hero__cloud--two" />
-        <div className="home-hero__cloud home-hero__cloud--three" />
-        <div className="container home-hero__inner">
-          <div className="home-hero__copy">
-            <p className="home-kicker">Toys and Games</p>
-            <h1>Pick the best toy for your kid</h1>
-            <p className="home-hero__text">
-              We offer a premium service, whether you are shopping at one of our flagship stores or
-              via our website.
-            </p>
-            <Link className="btn home-hero__button" href="/shop/">
-              Discover Now
-            </Link>
-          </div>
-
-          <div className="home-hero__visual">
-            <span className="home-hero__spark home-hero__spark--one" />
-            <span className="home-hero__spark home-hero__spark--two" />
-            <span className="home-hero__spark home-hero__spark--three" />
-            <Image
-              alt="Happy child enjoying toys"
-              className="home-hero__image"
-              height={1200}
-              priority
-              src="/images/real/headphones-boy.jpg"
-              width={1200}
-            />
-          </div>
-        </div>
-      </section>
+      <HeroSlider />
 
       <section className="home-section home-section--tight">
         <div className="container">
@@ -80,6 +48,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <ReviewMediaCarousel />
+
       <section className="home-section home-section--soft">
         <div className="container">
           <div className="home-section__heading home-section__heading--center">
@@ -87,7 +57,7 @@ export default function HomePage() {
             <h2>Popular in Store</h2>
           </div>
 
-          <div className="product-grid">
+          <div className="grid-3 product-grid">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} variant="shop" />
             ))}

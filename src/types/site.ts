@@ -11,6 +11,14 @@ export interface BlogPost {
   date: string;
   image: string;
   excerpt: string;
+  author: string;
+  authorImage: string;
+  intro: string;
+  paragraphs: string[];
+  quote: string;
+  detailImage: string;
+  tags: string[];
+  likes: number;
 }
 
 export interface Category {
@@ -32,6 +40,16 @@ export interface ProductMedia {
   src: string;
   alt?: string;
   poster?: string;
+}
+
+export interface ReviewMediaItem {
+  id: number;
+  type: "image" | "video";
+  src: string;
+  poster?: string;
+  title: string;
+  description: string;
+  author: string;
 }
 
 export interface Product {

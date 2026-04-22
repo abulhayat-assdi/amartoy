@@ -1,23 +1,16 @@
 import Image from "next/image";
-import { Mail, MapPin, Phone } from "lucide-react";
-import { company, pageBanners } from "@/data/site";
+import { CircleHelp, Mail, Paperclip, Phone, SendHorizonal, UserRound } from "lucide-react";
+import { company } from "@/data/site";
 import { Button } from "@/components/ui/button";
-import { PageHero } from "@/components/ui/page-hero";
 
 export default function ContactPage() {
   return (
     <>
-      <PageHero
-        {...pageBanners.contact}
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Contacts" },
-        ]}
-      />
       <section className="section contact-section">
         <div className="container contact-grid">
           <div className="contact-visual">
             <div className="contact-visual__panel" />
+            <div className="contact-visual__glow" />
             <Image
               alt="Friendly AmarToy customer support"
               className="contact-visual__art"
@@ -27,53 +20,49 @@ export default function ContactPage() {
             />
             <span className="contact-shape contact-shape--cross" />
             <span className="contact-shape contact-shape--ring" />
+            <span className="contact-shape contact-shape--ring-small" />
+            <span className="contact-shape contact-shape--cross-bottom" />
           </div>
 
-          <div className="contact-card">
-            <p className="eyebrow">Contact Us</p>
-            <h2>Have Questions? Get in touch!</h2>
+          <div className="contact-card contact-card--minimal">
+            <p className="eyebrow contact-card__eyebrow">Contact Us</p>
+            <h1>Have Questions? Get in touch!</h1>
             <form className="contact-form">
-              <input className="form-input" placeholder="Name" type="text" />
-              <input className="form-input" placeholder="Email Address" type="email" />
-              <input className="form-input" placeholder="Phone" type="text" />
-              <input className="form-input" placeholder="Subject" type="text" />
-              <textarea className="form-input" placeholder="How can we help you? Feel free to get in touch!" rows={6} />
-              <label className="newsletter-form__check">
-                <input type="checkbox" />
-                <span>I agree that my submitted data is being collected and stored.</span>
+              <label className="contact-field">
+                <UserRound size={18} strokeWidth={1.7} />
+                <input className="contact-field__input" placeholder="Name" type="text" />
               </label>
-              <Button>Get In Touch</Button>
+              <label className="contact-field">
+                <Mail size={18} strokeWidth={1.7} />
+                <input className="contact-field__input" placeholder="Email Address" type="email" />
+              </label>
+              <label className="contact-field">
+                <Phone size={18} strokeWidth={1.7} />
+                <input className="contact-field__input" placeholder="Phone" type="text" />
+              </label>
+              <label className="contact-field">
+                <CircleHelp size={18} strokeWidth={1.7} />
+                <input className="contact-field__input" placeholder="Subject" type="text" />
+              </label>
+              <label className="contact-field contact-field--textarea">
+                <Paperclip size={18} strokeWidth={1.7} />
+                <textarea
+                  className="contact-field__input contact-field__textarea"
+                  placeholder="How can we help you? Feel free to get in touch!"
+                  rows={6}
+                />
+              </label>
+              <label className="contact-consent">
+                <input type="checkbox" />
+                <span>
+                  I agree that my submitted data is being <u>collected and stored.</u>
+                </span>
+              </label>
+              <Button className="contact-submit" type="submit">
+                <SendHorizonal size={18} />
+                Get In Touch
+              </Button>
             </form>
-
-            <div className="contact-details">
-              <div className="contact-item">
-                <span className="contact-icon">
-                  <MapPin size={18} />
-                </span>
-                <div>
-                  <strong>Address</strong>
-                  <p>{company.address}</p>
-                </div>
-              </div>
-              <div className="contact-item">
-                <span className="contact-icon">
-                  <Mail size={18} />
-                </span>
-                <div>
-                  <strong>Email</strong>
-                  <p>{company.email}</p>
-                </div>
-              </div>
-              <div className="contact-item">
-                <span className="contact-icon">
-                  <Phone size={18} />
-                </span>
-                <div>
-                  <strong>Phone</strong>
-                  <p>{company.phone}</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
