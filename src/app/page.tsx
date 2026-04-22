@@ -1,91 +1,156 @@
-import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { blogPosts, categories, products } from "@/data/site";
-import { HeroSlider } from "@/components/sections/hero-slider";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { CategoryCard } from "@/components/ui/category-card";
-import { Reveal } from "@/components/ui/reveal";
-import { ProductsShowcase } from "@/components/sections/products-showcase";
-import { AboutSplit } from "@/components/sections/about-split";
-import { FeaturesStrip } from "@/components/sections/features-strip";
-import { VideoBanner } from "@/components/sections/video-banner";
-import { TestimonialsSection } from "@/components/sections/testimonials-section";
-import { BlogCard } from "@/components/ui/blog-card";
+import {
+  ArrowRight,
+  BadgeDollarSign,
+  CircleHelp,
+  Heart,
+  PackageCheck,
+  ShieldCheck,
+  ShoppingBag,
+} from "lucide-react";
+import { blogPosts, categories, features, formatCurrency, products } from "@/data/site";
+import { ProductCard } from "@/components/ui/product-card";
+
+const featuredProducts = products.slice(0, 8);
+const featuredPosts = [blogPosts[2], blogPosts[0], blogPosts[3]];
+
+const featureIcons = [BadgeDollarSign, PackageCheck, ShoppingBag, CircleHelp];
 
 export default function HomePage() {
-  const featuredProducts = products.filter((product) =>
-    ["dolls-trailer", "construction-cup", "teddy-bear-toy", "emergency-truck"].includes(product.slug),
-  );
-  const catalogProducts = products.slice(0, 8);
-
   return (
     <>
-      <HeroSlider />
+      <section className="home-hero">
+        <div className="home-hero__sky" />
+        <div className="home-hero__stars" />
+        <div className="home-hero__cloud home-hero__cloud--one" />
+        <div className="home-hero__cloud home-hero__cloud--two" />
+        <div className="home-hero__cloud home-hero__cloud--three" />
+        <div className="container home-hero__inner">
+          <div className="home-hero__copy">
+            <p className="home-kicker">Toys and Games</p>
+            <h1>Pick the best toy for your kid</h1>
+            <p className="home-hero__text">
+              We offer a premium service, whether you are shopping at one of our flagship stores or
+              via our website.
+            </p>
+            <Link className="btn home-hero__button" href="/shop/">
+              Discover Now
+            </Link>
+          </div>
 
-      <section className="section home-categories">
+          <div className="home-hero__visual">
+            <span className="home-hero__spark home-hero__spark--one" />
+            <span className="home-hero__spark home-hero__spark--two" />
+            <span className="home-hero__spark home-hero__spark--three" />
+            <Image
+              alt="Happy child enjoying toys"
+              className="home-hero__image"
+              height={1200}
+              priority
+              src="/images/real/headphones-boy.jpg"
+              width={1200}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="home-section home-section--tight">
         <div className="container">
-          <SectionHeading
-            align="center"
-            eyebrow="Categories"
-            title="We design toys not just for kids but with kids"
-          />
-          <div className="grid-4">
-            {categories.map((category, index) => (
-              <Reveal delay={index * 0.08} key={category.id}>
-                <CategoryCard category={category} />
-              </Reveal>
+          <div className="home-section__heading home-section__heading--center">
+            <p className="home-kicker">Categories</p>
+            <h2>We design toys not just for kids but with kids</h2>
+          </div>
+
+          <div className="home-categories-grid">
+            {categories.map((category) => (
+              <Link className="home-category-card" href={category.href} key={category.id}>
+                <Image alt={category.name} fill className="home-category-card__image" src={category.image} />
+                <div className="home-category-card__overlay" />
+                <div className="home-category-card__content">
+                  <h3>{category.name}</h3>
+                  <span>
+                    Shop Now
+                    <ArrowRight size={16} />
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <ProductsShowcase
-        background="section"
-        eyebrow="Shop AmarToy & Games"
-        className="home-featured-products products-showcase--minimal"
-        products={featuredProducts}
-        showLink={false}
-        title="Popular in Store"
-      />
-
-      <AboutSplit
-        primaryImage="/images/real/kids-playroom.jpg"
-        secondaryImage="/images/real/happy-outdoors.jpg"
-      />
-
-      <ProductsShowcase
-        background="section"
-        eyebrow="Shop AmarToy & Games"
-        className="home-product-catalog products-showcase--minimal"
-        products={catalogProducts}
-        showLink={false}
-        title="Popular in Store"
-      />
-
-      <FeaturesStrip />
-      <VideoBanner />
-      <TestimonialsSection />
-
-      <section className="section home-blog">
+      <section className="home-section home-section--soft">
         <div className="container">
-          <SectionHeading
-            align="center"
-            eyebrow="Our Blog"
-            title="Latest News"
-            description="Editorial cards inspired by your reference layout, with clean spacing and strong visual hierarchy."
-          />
-          <div className="grid-3">
-            {blogPosts.slice(0, 3).map((post, index) => (
-              <Reveal delay={index * 0.1} key={post.id}>
-                <BlogCard post={post} />
-              </Reveal>
+          <div className="home-section__heading home-section__heading--center">
+            <p className="home-kicker">Shop AmarToy Toys & Games</p>
+            <h2>Popular in Store</h2>
+          </div>
+
+          <div className="product-grid">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} variant="shop" />
             ))}
           </div>
-          <div className="section-link-row">
-            <Link className="section-link" href="/blog/">
-              Explore the Blog
-              <ArrowRight size={16} />
-            </Link>
+        </div>
+      </section>
+
+      <section className="home-features-strip">
+        <div className="container home-features-strip__inner">
+          {features.map((feature, index) => {
+            const Icon = featureIcons[index] ?? ShieldCheck;
+
+            return (
+              <div className="home-feature-item" key={feature.title}>
+                <div className="home-feature-item__icon">
+                  <Icon size={26} />
+                </div>
+                <div>
+                  <strong>{feature.title}</strong>
+                  <p>{feature.subtitle}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="home-promo-banner">
+        <Image
+          alt="Happy kids outdoors"
+          className="home-promo-banner__image"
+          fill
+          sizes="100vw"
+          src="/images/real/happy-outdoors.jpg"
+        />
+        <div className="home-promo-banner__overlay" />
+        <div className="home-promo-banner__play">
+          <span>Play</span>
+        </div>
+      </section>
+
+      <section className="home-section">
+        <div className="container">
+          <div className="home-section__heading home-section__heading--center">
+            <p className="home-kicker">Our Blog</p>
+            <h2>Latest News</h2>
+          </div>
+
+          <div className="home-blog-grid">
+            {featuredPosts.map((post) => (
+              <article className="home-blog-card" key={post.id}>
+                <Link className="home-blog-card__image-wrap" href="/blog/">
+                  <Image alt={post.title} fill className="home-blog-card__image" src={post.image} />
+                </Link>
+                <div className="home-blog-card__meta">
+                  <span>{post.category}</span>
+                  <span>{post.date}</span>
+                </div>
+                <Link className="home-blog-card__title" href="/blog/">
+                  {post.title}
+                </Link>
+              </article>
+            ))}
           </div>
         </div>
       </section>

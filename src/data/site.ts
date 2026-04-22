@@ -1,4 +1,4 @@
-import type { NavigationItem, Product } from "@/types/site";
+import type { NavigationItem, Product, ProductMedia } from "@/types/site";
 
 export const company = {
   name: "AmarToy",
@@ -272,12 +272,41 @@ export const tags = [
   "Pretend Play",
 ];
 
-export const products = [
+const buildDefaultMedia = (product: Product): ProductMedia[] =>
+  Array.from({ length: 4 }, (_, index) => ({
+    type: "image",
+    src: product.image,
+    alt: `${product.name} view ${index + 1}`,
+  }));
+
+const baseProducts: Product[] = [
   {
     id: 1,
     slug: "skywinder-toy",
     name: "Skywinder Toy",
     image: "/images/real/headphones-boy.jpg",
+    media: [
+      {
+        type: "image",
+        src: "/images/real/headphones-boy.jpg",
+        alt: "Skywinder Toy front view",
+      },
+      {
+        type: "image",
+        src: "/images/real/playroom-toys.jpg",
+        alt: "Skywinder Toy playroom angle",
+      },
+      {
+        type: "image",
+        src: "/images/real/kids-playroom.jpg",
+        alt: "Skywinder Toy lifestyle setup",
+      },
+      {
+        type: "image",
+        src: "/images/real/toy-blocks.jpg",
+        alt: "Skywinder Toy detail shot",
+      },
+    ],
     category: "Electronic",
     categorySlug: "electronic",
     price: 250,
@@ -490,6 +519,28 @@ export const products = [
     slug: "melody-rocket",
     name: "Melody Rocket",
     image: "/images/real/headphones-boy.jpg",
+    media: [
+      {
+        type: "image",
+        src: "/images/real/headphones-boy.jpg",
+        alt: "Melody Rocket front view",
+      },
+      {
+        type: "image",
+        src: "/images/real/happy-outdoors.jpg",
+        alt: "Melody Rocket outdoor angle",
+      },
+      {
+        type: "image",
+        src: "/images/real/kids-blocks.jpg",
+        alt: "Melody Rocket activity scene",
+      },
+      {
+        type: "image",
+        src: "/images/real/baby-blocks.jpg",
+        alt: "Melody Rocket close up",
+      },
+    ],
     category: "Musical",
     categorySlug: "musical",
     price: 190,
@@ -505,6 +556,11 @@ export const products = [
     sku: "AT-1012",
   },
 ];
+
+export const products: Product[] = baseProducts.map((product) => ({
+  ...product,
+  media: (product.media && product.media.length ? product.media : buildDefaultMedia(product)).slice(0, 4),
+}));
 
 export const pageBanners = {
   services: {

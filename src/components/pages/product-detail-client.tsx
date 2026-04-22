@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
-import { Heart, ShoppingBag } from "lucide-react";
+import { useEffect, useState } from "react";
+import clsx from "clsx";
+import { Heart, Search, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/data/site";
 import { useStore } from "@/components/providers/store-provider";
@@ -11,28 +11,93 @@ import type { Product } from "@/types/site";
 export function ProductDetailClient({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
+  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const { addToCart, toggleWishlist, wishlist } = useStore();
 
   const active = wishlist.includes(product.id);
+  const mediaItems =
+    product.media && product.media.length
+      ? product.media.slice(0, 4)
+      : Array.from({ length: 4 }, (_, index) => ({
+          type: "image" as const,
+          src: product.image,
+          alt: `${product.name} view ${index + 1}`,
+        }));
+  const activeMedia = mediaItems[activeMediaIndex] ?? mediaItems[0];
+
+  useEffect(() => {
+    setActiveMediaIndex(0);
+  }, [product.id]);
+
+  useEffect(() => {
+    if (mediaItems.length < 2) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setActiveMediaIndex((currentIndex) => (currentIndex + 1) % mediaItems.length);
+    }, 5000);
+
+    return () => window.clearInterval(intervalId);
+  }, [mediaItems.length]);
 
   return (
     <div className="product-detail">
       <div className="product-gallery">
-        <div className={`product-gallery__main ${product.accent}`}>
-          <Image alt={product.name} className="product-gallery__image" height={900} src={product.image} width={900} />
-        </div>
-        <div className="product-gallery__thumbs">
-          {[0, 1, 2, 3].map((item) => (
-            <div className={`product-gallery__thumb ${product.accent}`} key={item}>
-              <Image
-                alt={`${product.name} preview ${item + 1}`}
-                className="product-gallery__thumb-image"
-                height={900}
-                src={product.image}
-                width={900}
+        <div className="product-gallery__stage">
+          <div className="product-gallery__thumbs">
+            {mediaItems.map((item, index) => (
+              <button
+                className={clsx(
+                  "product-gallery__thumb",
+                  product.accent,
+                  index === activeMediaIndex && "is-active",
+                )}
+                key={`${item.src}-${index}`}
+                type="button"
+                aria-label={`Show ${product.name} image ${index + 1}`}
+                onClick={() => setActiveMediaIndex(index)}
+              >
+                {item.type === "video" ? (
+                  <div className="product-gallery__thumb-video">
+                    <video className="product-gallery__thumb-media" muted playsInline preload="metadata">
+                      <source src={item.src} />
+                    </video>
+                    <span>Video</span>
+                  </div>
+                ) : (
+                  <img
+                    alt={item.alt || `${product.name} preview ${index + 1}`}
+                    className="product-gallery__thumb-media"
+                    loading="lazy"
+                    src={item.src}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+          <div className="product-gallery__main">
+            <button className="product-gallery__zoom" type="button" aria-label="Preview current image">
+              <Search size={18} />
+            </button>
+            {activeMedia.type === "video" ? (
+              <video
+                className="product-gallery__media"
+                controls
+                poster={activeMedia.poster}
+                preload="metadata"
+              >
+                <source src={activeMedia.src} />
+              </video>
+            ) : (
+              <img
+                alt={activeMedia.alt || product.name}
+                className="product-gallery__media"
+                loading="eager"
+                src={activeMedia.src}
               />
-            </div>
-          ))}
+            )}
+          </div>
         </div>
       </div>
 

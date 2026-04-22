@@ -31,9 +31,16 @@ export function Header({ onOpenSearch, onOpenPanel }: HeaderProps) {
     setMobileOpen(false);
   }, [pathname]);
 
+  // Dummy auth state: replace with real auth logic
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    // TODO: Replace with real auth check
+    setIsLoggedIn(typeof window !== "undefined" && window.localStorage.getItem("amartoy-demo-user") === "1");
+  }, [pathname]);
+
   return (
     <>
-      <header className={clsx("site-header", isScrolled && "site-header--scrolled")}>
+      <header className={clsx("site-header", isScrolled && "site-header--scrolled")}> 
         <div className="container header-inner">
           <BrandLogo />
 
@@ -60,6 +67,15 @@ export function Header({ onOpenSearch, onOpenPanel }: HeaderProps) {
           </nav>
 
           <div className="header-actions">
+            <Link
+              aria-label={isLoggedIn ? "Profile" : "Login"}
+              className="icon-btn icon-btn--profile"
+              href={isLoggedIn ? "/profile/" : "/login/"}
+              style={{ display: "inline-flex", alignItems: "center", gap: 6, marginRight: 8 }}
+            >
+              <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
+              <span style={{ fontSize: 15 }}>{isLoggedIn ? "My Profile" : "Sign in"}</span>
+            </Link>
             <Link aria-label="View cart" className="icon-btn icon-btn--cart" href="/cart/">
               <ShoppingBag size={22} />
               {cartCount ? <span className="cart-count-badge">{cartCount}</span> : null}

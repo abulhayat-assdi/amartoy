@@ -27,11 +27,19 @@ export interface NavigationItem {
   children?: NavigationItem[];
 }
 
+export interface ProductMedia {
+  type: "image" | "video";
+  src: string;
+  alt?: string;
+  poster?: string;
+}
+
 export interface Product {
   id: number;
   slug: string;
   name: string;
   image: string;
+  media?: ProductMedia[];
   category: string;
   categorySlug: string;
   price: number;

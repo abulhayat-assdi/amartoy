@@ -1,23 +1,36 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { pageBanners, products, tags } from "@/data/site";
-import { PageHero } from "@/components/ui/page-hero";
+import type { CSSProperties } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import clsx from "clsx";
+import { formatCurrency, products } from "@/data/site";
+import { useStore } from "@/components/providers/store-provider";
 import { ProductCard } from "@/components/ui/product-card";
 
 export default function ShopPage() {
+  const { cartCount, subtotal } = useStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("latest");
   const [currentPage, setCurrentPage] = useState(1);
   const [priceMax, setPriceMax] = useState(100);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const deferredSearchQuery = useDeferredValue(searchQuery);
 
   const itemsPerPage = 12;
 
-  const allPrices = products.map(p => p.price);
+  const allPrices = products.map((product) => product.price);
   const minPrice = Math.min(...allPrices);
   const maxPrice = Math.max(...allPrices);
+  const rangeProgress = ((priceMax - minPrice) / Math.max(maxPrice - minPrice, 1)) * 100;
+  const hasActiveFilters = Boolean(searchQuery || selectedCategory || priceMax < maxPrice);
+
+  const priceRangeStyle = {
+    "--shop-range-progress": `${rangeProgress}%`,
+  } as CSSProperties;
 
   useEffect(() => {
     setPriceMax(maxPrice);
@@ -25,150 +38,233 @@ export default function ShopPage() {
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    products.forEach(p => {
-      counts[p.category] = (counts[p.category] || 0) + 1;
+    products.forEach((product) => {
+      counts[product.category] = (counts[product.category] || 0) + 1;
     });
     return counts;
   }, []);
 
+  const categoryEntries = useMemo(
+    () => Object.entries(categoryCounts).sort(([left], [right]) => left.localeCompare(right)),
+    [categoryCounts],
+  );
+
   const filteredProducts = useMemo(() => {
     let filtered = products;
-    if (searchQuery) {
-      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    if (deferredSearchQuery) {
+      filtered = filtered.filter((product) =>
+        product.name.toLowerCase().includes(deferredSearchQuery.toLowerCase()),
+      );
     }
     if (selectedCategory) {
-      filtered = filtered.filter(p => p.category === selectedCategory);
+      filtered = filtered.filter((product) => product.category === selectedCategory);
     }
-    if (selectedTags.length) {
-      filtered = filtered.filter(p => selectedTags.some(tag => p.tags.includes(tag)));
-    }
-    filtered = filtered.filter(p => p.price <= priceMax);
+    filtered = filtered.filter((product) => product.price <= priceMax);
     return filtered;
-  }, [searchQuery, selectedCategory, selectedTags, priceMax]);
+  }, [deferredSearchQuery, selectedCategory, priceMax]);
 
   const sortedProducts = useMemo(() => {
     const sorted = [...filteredProducts];
     if (sortBy === "price-low") {
       sorted.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price-high") {
+      sorted.sort((a, b) => b.price - a.price);
     } else if (sortBy === "popular") {
       sorted.sort((a, b) => b.rating - a.rating);
     }
-    // latest as is
     return sorted;
   }, [filteredProducts, sortBy]);
 
   const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
-  const paginatedProducts = sortedProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedProducts = sortedProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   useEffect(() => {
     setCurrentPage(1);
   }, [filteredProducts, sortBy]);
 
-  const startItem = (currentPage - 1) * itemsPerPage + 1;
+  const startItem = sortedProducts.length ? (currentPage - 1) * itemsPerPage + 1 : 0;
   const endItem = Math.min(currentPage * itemsPerPage, sortedProducts.length);
 
-  return (
-    <>
-      <PageHero
-        {...pageBanners.shop}
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Shop" },
-        ]}
-      />
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory(null);
+    setPriceMax(maxPrice);
+  };
 
-      <section className="section">
-        <div className="container shop-layout">
-          <aside className="shop-sidebar">
-            <div className="sidebar-widget">
-              <h3>Cart</h3>
-              <p>No products in the cart.</p>
+  return (
+    <section className="shop-page">
+      <div className="container">
+        <header className="shop-page__hero">
+          <p className="shop-page__eyebrow">Premium toys curated for joyful everyday play</p>
+          <h1>Shop</h1>
+          <a className="shop-page__jump" href="#shop-catalog" aria-label="Jump to product catalog">
+            <ChevronDown size={22} />
+          </a>
+        </header>
+
+        <div className="shop-page__layout" id="shop-catalog">
+          <main className="shop-page__main">
+            <div className="shop-page__toolbar">
+              <div className="shop-page__results">
+                <span>
+                  Showing {startItem}-{endItem} of {sortedProducts.length} results
+                </span>
+                <p>
+                  {selectedCategory ? `${selectedCategory} collection` : "All playful categories"}{" "}
+                  with prices up to {formatCurrency(priceMax)}
+                </p>
+              </div>
+              <div className="shop-page__toolbar-controls">
+                <button
+                  className="shop-page__filter-toggle"
+                  type="button"
+                  aria-expanded={showFilters}
+                  aria-controls="shop-filters"
+                  onClick={() => setShowFilters((current) => !current)}
+                >
+                  <SlidersHorizontal size={16} />
+                  Filters
+                </button>
+                <label className="shop-page__sort">
+                  <span>Sort by</span>
+                  <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+                    <option value="latest">Latest</option>
+                    <option value="popular">Popularity</option>
+                    <option value="price-low">Price: low to high</option>
+                    <option value="price-high">Price: high to low</option>
+                  </select>
+                </label>
+              </div>
             </div>
-            <div className="sidebar-widget">
-              <h3>Search for products</h3>
-              <input
-                className="shop-search"
-                placeholder="Search products ..."
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className="sidebar-widget">
-              <h3>Product categories</h3>
-              <ul className="sidebar-list">
-                {Object.entries(categoryCounts).map(([cat, count]) => (
-                  <li
-                    key={cat}
-                    onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
-                    className={selectedCategory === cat ? "active" : ""}
+
+            {!paginatedProducts.length ? (
+              <div className="shop-page__empty">
+                <h2>No products match this filter</h2>
+                <p>Try another category or expand your price range to bring more toys back.</p>
+                <button className="shop-page__clear" type="button" onClick={clearFilters}>
+                  Reset filters
+                </button>
+              </div>
+            ) : (
+              <div className="shop-page__grid">
+                {paginatedProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} variant="shop" />
+                ))}
+              </div>
+            )}
+
+            {totalPages > 1 ? (
+              <div className="shop-page__pagination">
+                {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                  <button
+                    key={page}
+                    className={clsx("shop-page__page-btn", page === currentPage && "active")}
+                    type="button"
+                    onClick={() => setCurrentPage(page)}
                   >
-                    {cat} ({count})
+                    {page}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </main>
+
+          <aside className={clsx("shop-page__sidebar", showFilters && "is-open")} id="shop-filters">
+            <div className="shop-page__panel">
+              <h3>Cart</h3>
+              <p>
+                {cartCount
+                  ? `${cartCount} item${cartCount > 1 ? "s" : ""} ready in your cart.`
+                  : "No products in the cart."}
+              </p>
+              {cartCount ? (
+                <strong className="shop-page__panel-price">{formatCurrency(subtotal)}</strong>
+              ) : null}
+              <Link className="shop-page__cart-link" href="/cart/">
+                Open cart
+              </Link>
+            </div>
+
+            <div className="shop-page__panel">
+              <label className="shop-page__search" htmlFor="shop-search">
+                <Search size={18} />
+                <input
+                  id="shop-search"
+                  className="shop-search"
+                  placeholder="Search for products ..."
+                  type="text"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                />
+              </label>
+            </div>
+
+            <div className="shop-page__panel">
+              <div className="shop-page__panel-header">
+                <h3>Product categories</h3>
+                {selectedCategory ? (
+                  <button
+                    className="shop-page__mini-clear"
+                    type="button"
+                    onClick={() => setSelectedCategory(null)}
+                  >
+                    Clear
+                  </button>
+                ) : null}
+              </div>
+              <ul className="shop-page__category-list">
+                {categoryEntries.map(([category, count]) => (
+                  <li key={category}>
+                    <button
+                      className={clsx(
+                        "shop-page__category-button",
+                        selectedCategory === category && "active",
+                      )}
+                      type="button"
+                      onClick={() =>
+                        setSelectedCategory((current) => (current === category ? null : category))
+                      }
+                    >
+                      <span>{category}</span>
+                      <strong>({count})</strong>
+                    </button>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="sidebar-widget">
-              <h3>Price range</h3>
-              <input
-                type="range"
-                min={minPrice}
-                max={maxPrice}
-                value={priceMax}
-                onChange={(e) => setPriceMax(Number(e.target.value))}
-              />
-              <span>Up to ${priceMax}</span>
-            </div>
-            <div className="sidebar-widget">
-              <h3>Tags</h3>
-              <div className="tag-cloud">
-                {tags.map((tag) => (
-                  <span
-                    key={tag}
-                    onClick={() => {
-                      setSelectedTags(prev =>
-                        prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-                      );
-                    }}
-                    className={selectedTags.includes(tag) ? "active" : ""}
-                  >
-                    {tag}
-                  </span>
-                ))}
+
+            <div className="shop-page__panel">
+              <div className="shop-page__panel-header">
+                <h3>Filter</h3>
+                {hasActiveFilters ? (
+                  <button className="shop-page__mini-clear" type="button" onClick={clearFilters}>
+                    Reset
+                  </button>
+                ) : null}
               </div>
+              <div className="shop-page__range-wrap" style={priceRangeStyle}>
+                <input
+                  className="shop-page__range"
+                  type="range"
+                  min={minPrice}
+                  max={maxPrice}
+                  value={priceMax}
+                  onChange={(event) => setPriceMax(Number(event.target.value))}
+                />
+              </div>
+              <p className="shop-page__range-label">
+                Price: {formatCurrency(minPrice)} - {formatCurrency(priceMax)}
+              </p>
+              <button className="shop-page__apply" type="button" onClick={() => setShowFilters(false)}>
+                Apply filters
+              </button>
             </div>
           </aside>
-
-          <div>
-            <div className="shop-toolbar">
-              <span>Showing {startItem}-{endItem} of {sortedProducts.length} products</span>
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                <option value="latest">Sort by latest</option>
-                <option value="popular">Sort by popularity</option>
-                <option value="price-low">Price: low to high</option>
-              </select>
-            </div>
-            <div className="grid-3 product-grid">
-              {paginatedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-            {totalPages > 1 && (
-              <div className="pagination">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <span
-                    key={page}
-                    className={`page-btn ${page === currentPage ? "active" : ""}`}
-                    onClick={() => setCurrentPage(page)}
-                  >
-                    {page}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

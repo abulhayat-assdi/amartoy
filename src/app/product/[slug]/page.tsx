@@ -46,6 +46,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </section>
       <ProductsShowcase
         background="section section-alt"
+        cardVariant="recommendation"
+        className="products-showcase--recommendation"
         eyebrow="Related Products"
         products={products.filter((item) => item.id !== product.id).slice(0, 3)}
         title="You may also like"

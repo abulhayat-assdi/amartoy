@@ -1,55 +1,45 @@
 "use client";
 
-import { Autoplay, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { Quote } from "lucide-react";
 import { testimonials } from "@/data/site";
-import { SectionHeading } from "@/components/ui/section-heading";
 import { Button } from "@/components/ui/button";
 
 export function TestimonialsSection({ compact = false }: { compact?: boolean }) {
+  const items = testimonials.slice(0, compact ? 2 : 3);
+
   return (
     <section className={`section testimonials-section ${compact ? "testimonials-section--compact" : ""}`}>
+      <div className="testimonials-section__backdrop" />
       <div className="container">
         <div className="testimonials-section__layout">
           <div className="testimonials-section__intro">
-            <SectionHeading
-              align="left"
-              eyebrow="Testimonials"
-              title="What Our Clients Say About Us"
-              description="We appreciate your kind and honest feedback and invite you to our amazing store."
-            />
+            <p className="testimonials-section__eyebrow">Testimonials</p>
+            <h2 className="testimonials-section__title">What Our Clients Say About Us</h2>
+            <p className="testimonials-section__description">
+              We appreciate your kind and honest feedback and invite you to our amazing store.
+            </p>
             <Button className="testimonials-section__button" href="/about/">
               About Us
             </Button>
           </div>
-          <Swiper
-            autoplay={{ delay: 4200, disableOnInteraction: false }}
-            breakpoints={{
-              0: { slidesPerView: 1 },
-              900: { slidesPerView: 2 },
-            }}
-            className="testimonials-swiper"
-            modules={[Autoplay, Pagination]}
-            pagination={{ clickable: true }}
-            spaceBetween={24}
-          >
-            {testimonials.slice(0, compact ? 2 : 3).map((testimonial) => (
-              <SwiperSlide key={testimonial.id}>
-                <article className="testimonial-card">
-                  <Quote className="testimonial-card__icon" size={34} />
-                  <p className="testimonial-card__quote">{testimonial.quote}</p>
-                  <div className="testimonial-card__person">
-                    <div className="testimonial-card__avatar">{testimonial.name[0]}</div>
-                    <div>
-                      <strong>{testimonial.name}</strong>
-                      <span>{testimonial.role}</span>
-                    </div>
+
+          <div className="testimonials-section__cards">
+            {items.map((testimonial, index) => (
+              <article className="testimonial-card testimonial-card--showcase" key={testimonial.id}>
+                <div className={`testimonial-card__quote-mark testimonial-card__quote-mark--${index % 2 === 0 ? "blue" : "green"}`}>
+                  <Quote size={28} />
+                </div>
+                <p className="testimonial-card__quote">{testimonial.quote}</p>
+                <div className="testimonial-card__person">
+                  <div className="testimonial-card__avatar">{testimonial.name[0]}</div>
+                  <div>
+                    <strong>{testimonial.name}</strong>
+                    <span>{testimonial.role}</span>
                   </div>
-                </article>
-              </SwiperSlide>
+                </div>
+              </article>
             ))}
-          </Swiper>
+          </div>
         </div>
       </div>
     </section>

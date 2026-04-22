@@ -13,6 +13,7 @@ interface ProductsShowcaseProps {
   background?: string;
   className?: string;
   showLink?: boolean;
+  cardVariant?: "default" | "shop" | "recommendation";
 }
 
 export function ProductsShowcase({
@@ -22,6 +23,7 @@ export function ProductsShowcase({
   background = "section",
   className,
   showLink = true,
+  cardVariant = "default",
 }: ProductsShowcaseProps) {
   return (
     <section className={clsx(background, className)}>
@@ -30,7 +32,7 @@ export function ProductsShowcase({
         <div className="grid-4 product-grid">
           {products.map((product, index) => (
             <Reveal delay={index * 0.08} key={product.id}>
-              <ProductCard product={product} />
+              <ProductCard product={product} variant={cardVariant} />
             </Reveal>
           ))}
         </div>
