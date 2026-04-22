@@ -38,6 +38,7 @@ interface StoreContextValue {
   addToCart: (id: number, quantity?: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
   removeFromCart: (id: number) => void;
+  clearCart: () => void;
 }
 
 const initialState: PersistedStoreState = {
@@ -148,6 +149,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setCart((current) => current.filter((item) => item.id !== id));
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   const value: StoreContextValue = {
     ready,
     cart,
@@ -161,6 +166,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     addToCart,
     updateQuantity,
     removeFromCart,
+    clearCart,
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
