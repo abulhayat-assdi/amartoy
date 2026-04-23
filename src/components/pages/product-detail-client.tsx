@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import { Heart, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/data/site";
+import { CurrencyDisplay } from "@/components/ui/currency-display";
 import { useStore } from "@/components/providers/store-provider";
 import type { Product } from "@/types/site";
 
@@ -15,6 +16,7 @@ interface ProductReview {
 }
 
 export function ProductDetailClient({ product }: { product: Product }) {
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
@@ -22,9 +24,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const [reviewName, setReviewName] = useState("");
   const [reviewText, setReviewText] = useState("");
-  const { addToCart, toggleWishlist, wishlist } = useStore();
-
-  const active = wishlist.includes(product.id);
+  const { addToCart } = useStore();
   const initialReviews: ProductReview[] = [
     {
       id: `${product.id}-review-1`,
@@ -122,11 +122,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           <div className="product-gallery__thumbs">
             {mediaItems.map((item, index) => (
               <button
-                className={clsx(
-                  "product-gallery__thumb",
-                  product.accent,
-                  index === activeMediaIndex && "is-active",
-                )}
+                className={clsx("product-gallery__thumb", index === activeMediaIndex && "is-active")}
                 key={`${item.src}-${index}`}
                 type="button"
                 aria-label={`Show ${product.name} image ${index + 1}`}
@@ -177,11 +173,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
         <h1>{product.name}</h1>
         <div className="product-card__price-row">
           {product.originalPrice ? (
-            <span className="product-card__price product-card__price--original">
-              {formatCurrency(product.originalPrice)}
-            </span>
+            <CurrencyDisplay amount={product.originalPrice} className="product-card__price product-card__price--original" />
           ) : null}
-          <span className="product-card__price">{formatCurrency(product.price)}</span>
+          <CurrencyDisplay amount={product.price} className="product-card__price" />
         </div>
         <p>{product.description}</p>
         <div className="qty-stepper">
@@ -193,13 +187,18 @@ export function ProductDetailClient({ product }: { product: Product }) {
             +
           </button>
         </div>
-        <Button onClick={() => addToCart(product.id, quantity)}>
+        <Button
+          onClick={() => {
+            addToCart(product.id, quantity);
+            router.push("/checkout/");
+          }}
+        >
           <ShoppingBag size={16} />
           Buy Now
         </Button>
-        <button className="wishlist-link" type="button" onClick={() => toggleWishlist(product.id)}>
-          <Heart size={18} fill={active ? "currentColor" : "none"} />
-          {active ? "Added to Wishlist" : "Add to Wishlist"}
+        <button className="wishlist-link" type="button" onClick={() => addToCart(product.id, quantity)}>
+          <ShoppingBag size={18} />
+          Add to Cart
         </button>
         <div className="product-meta">
           <span>Product ID: {product.sku}</span>

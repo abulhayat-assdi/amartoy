@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { HeartOff, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/data/site";
+import { CurrencyDisplay } from "@/components/ui/currency-display";
 import { useStore } from "@/components/providers/store-provider";
 
 export function WishlistPageClient() {
@@ -34,11 +34,11 @@ export function WishlistPageClient() {
           <button className="remove-btn" type="button" onClick={() => toggleWishlist(item.id)}>
             ×
           </button>
-          <div className={`wishlist-table__art ${item.accent}`}>
+          <div className="wishlist-table__art">
             <Image alt={item.name} className="wishlist-table__image" height={900} src={item.image} width={900} />
           </div>
           <strong>{item.name}</strong>
-          <span>{formatCurrency(item.price)}</span>
+          <span><CurrencyDisplay amount={item.price} /></span>
           <span className="stock-badge">{item.stock}</span>
           <Button onClick={() => addToCart(item.id)}>
             <ShoppingBag size={16} />

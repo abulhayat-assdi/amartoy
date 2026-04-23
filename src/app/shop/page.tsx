@@ -3,14 +3,16 @@
 import type { CSSProperties } from "react";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { ArrowRight, ChevronDown, ChevronRight, Search, SlidersHorizontal } from "lucide-react";
 import clsx from "clsx";
-import { formatCurrency, products } from "@/data/site";
+import { categories, formatCurrency, getShowcaseProductsByCategorySlug, products } from "@/data/site";
 import { useStore } from "@/components/providers/store-provider";
 import { ProductCard } from "@/components/ui/product-card";
 
 export default function ShopPage() {
   const { cartCount, subtotal } = useStore();
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState("latest");
@@ -51,14 +53,17 @@ export default function ShopPage() {
 
   const categoryShowcases = useMemo(
     () =>
-      categoryEntries.map(([category, count]) => ({
-        category,
-        count,
-        products: [...products]
-          .filter((product) => product.category === category)
-          .sort((left, right) => right.id - left.id)
-          .slice(0, 3),
-      })),
+      categoryEntries.map(([category, count]) => {
+        const matchingProduct = products.find((product) => product.category === category);
+        const categorySlug = matchingProduct?.categorySlug ?? category.toLowerCase().replace(/\s+/g, "-");
+
+        return {
+          category,
+          categorySlug,
+          count,
+          products: getShowcaseProductsByCategorySlug(categorySlug, 4),
+        };
+      }),
     [categoryEntries],
   );
 
@@ -100,6 +105,33 @@ export default function ShopPage() {
     setCurrentPage(1);
   }, [filteredProducts, sortBy]);
 
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    const sectionSlug = searchParams.get("section");
+
+    if (!sectionSlug || typeof document === "undefined") {
+      return;
+    }
+
+    const scrollTarget = () => {
+      document.getElementById(`category-${sectionSlug}`)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    };
+
+    scrollTarget();
+
+    const timer = window.setTimeout(scrollTarget, 250);
+
+    return () => window.clearTimeout(timer);
+  }, [searchParams]);
+
   const startItem = sortedProducts.length ? (currentPage - 1) * itemsPerPage + 1 : 0;
   const endItem = Math.min(currentPage * itemsPerPage, sortedProducts.length);
 
@@ -109,12 +141,8 @@ export default function ShopPage() {
     setPriceMax(maxPrice);
   };
 
-  const showCategoryProducts = (category: string) => {
-    setSearchQuery("");
-    setSelectedCategory(category);
-    setSortBy("latest");
-    setCurrentPage(1);
-    setShowFilters(false);
+  const changePage = (page: number) => {
+    setCurrentPage(page);
 
     if (typeof document !== "undefined") {
       document.getElementById("shop-catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -198,30 +226,43 @@ export default function ShopPage() {
                     key={page}
                     className={clsx("shop-page__page-btn", page === currentPage && "active")}
                     type="button"
-                    onClick={() => setCurrentPage(page)}
+                    onClick={() => changePage(page)}
+                    aria-current={page === currentPage ? "page" : undefined}
                   >
                     {page}
                   </button>
                 ))}
+                <button
+                  className="shop-page__page-btn"
+                  type="button"
+                  onClick={() => changePage(currentPage + 1)}
+                  disabled={currentPage >= totalPages}
+                  aria-label="Go to next page"
+                >
+                  <ChevronRight size={18} />
+                </button>
               </div>
             ) : null}
 
             <div className="shop-page__category-showcases">
               {categoryShowcases.map((showcase) => (
-                <section className="shop-page__category-section" key={showcase.category}>
+                <section
+                  className="shop-page__category-section"
+                  id={`category-${showcase.categorySlug}`}
+                  key={showcase.category}
+                >
                   <div className="shop-page__category-section-head">
                     <div>
                       <p className="shop-page__catalog-eyebrow">{showcase.category}</p>
                       <h3>{showcase.category}</h3>
                     </div>
-                    <button
+                    <Link
                       className="shop-page__see-more"
-                      type="button"
-                      onClick={() => showCategoryProducts(showcase.category)}
+                      href={`/shop/${showcase.categorySlug}/`}
                     >
                       See More Products
                       <ArrowRight size={16} />
-                    </button>
+                    </Link>
                   </div>
 
                   <div className="shop-page__grid shop-page__grid--showcase">

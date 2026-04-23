@@ -1,4 +1,4 @@
-import type { NavigationItem, Product, ProductMedia, ReviewMediaItem } from "@/types/site";
+﻿import type { NavigationItem, Product, ProductMedia, ReviewMediaItem } from "@/types/site";
 
 export const company = {
   name: "AmarToy",
@@ -76,28 +76,32 @@ export const categories = [
   {
     id: 1,
     name: "Bath Toys",
-    href: "/shop/",
+    slug: "bath-toys",
+    href: "/shop/?section=bath-toys#category-bath-toys",
     image: "/images/real/kids-playroom.jpg",
     description: "Water-safe picks for splash-filled routines.",
   },
   {
     id: 2,
     name: "Figures Play",
-    href: "/shop/",
+    slug: "figures-play",
+    href: "/shop/?section=figures-play#category-figures-play",
     image: "/images/real/teddy-room.jpg",
     description: "Character sets and pretend-play worlds.",
   },
   {
     id: 3,
     name: "Learning",
-    href: "/shop/",
+    slug: "learning",
+    href: "/shop/?section=learning#category-learning",
     image: "/images/real/toy-blocks.jpg",
     description: "Building, sorting, and brain-boosting fun.",
   },
   {
     id: 4,
     name: "Musical",
-    href: "/shop/",
+    slug: "musical",
+    href: "/shop/?section=musical#category-musical",
     image: "/images/real/happy-outdoors.jpg",
     description: "Sound toys for rhythm, melody, and movement.",
   },
@@ -150,14 +154,14 @@ export const testimonials = [
   {
     id: 1,
     name: "Mandy Mathers",
-    role: "CEO, Business Co.",
+    role: "Mother of 2, Dhaka",
     quote:
       "What a great store for the entire family. My kids love this place because of the toys and the easy shopping flow.",
   },
   {
     id: 2,
     name: "Peter Bowman",
-    role: "CEO, Business Co.",
+    role: "Father of 3, Chittagong",
     quote:
       "Not only do the toys make our children squeal with joy, but the sales team and checkout experience are awesome.",
   },
@@ -167,6 +171,41 @@ export const testimonials = [
     role: "Parent & Teacher",
     quote:
       "I was surprised at how attentive the team is to each little customer. Parents can actually relax and enjoy shopping here.",
+  },
+  {
+    id: 4,
+    name: "Nusrat Jahan",
+    role: "Mom & Blogger, Dhaka",
+    quote:
+      "AmarToy has the most thoughtful collection I have found online. The packaging was beautiful and delivery was super fast!",
+  },
+  {
+    id: 5,
+    name: "Rafiqul Islam",
+    role: "Parent, Rajshahi",
+    quote:
+      "My daughter was so happy when she received her birthday toy from AmarToy. The quality is outstanding and the price is very reasonable.",
+  },
+  {
+    id: 6,
+    name: "Sadia Rahman",
+    role: "Teacher & Parent, Sylhet",
+    quote:
+      "The learning toys here are genuinely educational and fun at the same time. My son has been playing with his blocks for weeks!",
+  },
+  {
+    id: 7,
+    name: "Mahin Ahmed",
+    role: "Father, Comilla",
+    quote:
+      "Cash on delivery made it so easy to order. The toy arrived on time and was exactly as described. Very happy with the experience!",
+  },
+  {
+    id: 8,
+    name: "Fariha Karim",
+    role: "Mother of Twins, Dhaka",
+    quote:
+      "Ordering for two kids is always stressful but AmarToy made it simple. Both my children love their toys and ask for them every day.",
   },
 ];
 
@@ -226,7 +265,7 @@ export const blogPosts = [
   {
     id: 2,
     slug: "main-challenge-for-parents",
-    title: "What’s the main challenge for parents?",
+    title: "Whatâ€™s the main challenge for parents?",
     category: "Parenting",
     date: "Apr 23, 2026",
     image: "/images/real/playroom-toys.jpg",
@@ -649,6 +688,234 @@ const baseProducts: Product[] = [
     stock: "In stock",
     sku: "AT-1012",
   },
+  {
+    id: 13,
+    slug: "rainbow-spinner",
+    name: "Rainbow Spinner",
+    image: "/images/real/happy-outdoors.jpg",
+    category: "Bath Toys",
+    categorySlug: "bath-toys",
+    price: 88,
+    description:
+      "A colorful spinning toy designed to keep bath time lively, tactile, and easy for little hands to grip.",
+    shortDescription: "A cheerful spinner that adds motion and fun to bath routines.",
+    accent: "accent-sky",
+    artwork: "spinner",
+    tags: ["Bath", "Colorful", "Popular"],
+    saleLabel: null,
+    rating: 4,
+    stock: "In stock",
+    sku: "AT-1013",
+  },
+  {
+    id: 14,
+    slug: "piano-pals",
+    name: "Piano Pals",
+    image: "/images/real/headphones-boy.jpg",
+    category: "Musical",
+    categorySlug: "musical",
+    price: 210,
+    description:
+      "A melody-first keyboard toy with bright buttons, gentle sounds, and a playful introduction to rhythm.",
+    shortDescription: "A beginner-friendly musical toy with colorful piano keys.",
+    accent: "accent-violet",
+    artwork: "piano",
+    tags: ["Music", "Interactive", "Gift"],
+    saleLabel: "New",
+    rating: 5,
+    stock: "In stock",
+    sku: "AT-1014",
+  },
+  {
+    id: 15,
+    slug: "alphabet-train",
+    name: "Alphabet Train",
+    image: "/images/real/toy-blocks.jpg",
+    category: "Learning",
+    categorySlug: "learning",
+    price: 160,
+    description:
+      "A pull-along train set that blends letter learning, sorting, and playful movement into one activity.",
+    shortDescription: "A letter-learning train for early matching and movement play.",
+    accent: "accent-citrus",
+    artwork: "train",
+    tags: ["Alphabet", "Preschool", "Learning"],
+    saleLabel: null,
+    rating: 5,
+    stock: "In stock",
+    sku: "AT-1015",
+  },
+  {
+    id: 16,
+    slug: "space-ranger-bot",
+    name: "Space Ranger Bot",
+    image: "/images/real/playroom-toys.jpg",
+    category: "Electronic",
+    categorySlug: "electronic",
+    price: 275,
+    description:
+      "A light-up robot toy with expressive movement and chunky controls made for repeat play sessions.",
+    shortDescription: "A playful electronic bot with lights, sounds, and movement.",
+    accent: "accent-ocean",
+    artwork: "robot",
+    tags: ["Electronic", "Robot", "Best Seller"],
+    saleLabel: null,
+    rating: 5,
+    stock: "In stock",
+    sku: "AT-1016",
+  },
+  {
+    id: 17,
+    slug: "mini-builder-set",
+    name: "Mini Builder Set",
+    image: "/images/real/kids-blocks.jpg",
+    category: "Learning",
+    categorySlug: "learning",
+    price: 135,
+    description:
+      "A compact building kit that encourages stacking, matching, and early engineering-style discovery.",
+    shortDescription: "A compact learning set packed with colorful building fun.",
+    accent: "accent-mint",
+    artwork: "blocks",
+    tags: ["Building", "STEM", "Family"],
+    saleLabel: "-15%",
+    rating: 4,
+    stock: "In stock",
+    sku: "AT-1017",
+  },
+  {
+    id: 18,
+    slug: "animal-parade",
+    name: "Animal Parade",
+    image: "/images/real/baby-blocks.jpg",
+    category: "Figures Play",
+    categorySlug: "figures-play",
+    price: 118,
+    description:
+      "A parade-style animal set designed for storytelling, matching games, and imaginative table play.",
+    shortDescription: "A lively animal figure set for pretend-play and matching games.",
+    accent: "accent-leaf",
+    artwork: "animals",
+    tags: ["Figures", "Storytelling", "Gift"],
+    saleLabel: null,
+    rating: 4,
+    stock: "In stock",
+    sku: "AT-1018",
+  },
+  {
+    id: 19,
+    slug: "splash-friends-duo",
+    name: "Splash Friends Duo",
+    image: "/images/real/kids-playroom.jpg",
+    category: "Bath Toys",
+    categorySlug: "bath-toys",
+    price: 76,
+    description:
+      "A pair of floating bath companions with soft edges and an easy squeeze design for water play.",
+    shortDescription: "A soft floating bath duo made for splashy daily play.",
+    accent: "accent-peach",
+    artwork: "duck",
+    tags: ["Bath", "Soft", "Daily Play"],
+    saleLabel: null,
+    rating: 4,
+    stock: "In stock",
+    sku: "AT-1019",
+  },
+  {
+    id: 20,
+    slug: "storybook-stage",
+    name: "Storybook Stage",
+    image: "/images/real/happy-outdoors.jpg",
+    category: "Figures Play",
+    categorySlug: "figures-play",
+    price: 240,
+    description:
+      "A foldout stage set that turns figurines and dolls into an instant pretend-play storytelling world.",
+    shortDescription: "A foldout pretend-play stage for stories, scenes, and roleplay.",
+    accent: "accent-rose",
+    artwork: "stage",
+    tags: ["Pretend Play", "Creative", "Indoor"],
+    saleLabel: "Hot",
+    rating: 5,
+    stock: "In stock",
+    sku: "AT-1020",
+  },
+  {
+    id: 21,
+    slug: "drum-beat-junior",
+    name: "Drum Beat Junior",
+    image: "/images/real/headphones-boy.jpg",
+    category: "Musical",
+    categorySlug: "musical",
+    price: 145,
+    description:
+      "A toddler-friendly rhythm toy with soft-touch surfaces and a sound profile built for upbeat play.",
+    shortDescription: "A junior drum toy for rhythm practice and active fun.",
+    accent: "accent-sunset",
+    artwork: "drum",
+    tags: ["Music", "Rhythm", "Toddler"],
+    saleLabel: null,
+    rating: 4,
+    stock: "In stock",
+    sku: "AT-1021",
+  },
+  {
+    id: 22,
+    slug: "count-and-stack-tower",
+    name: "Count & Stack Tower",
+    image: "/images/real/toy-blocks.jpg",
+    category: "Learning",
+    categorySlug: "learning",
+    price: 128,
+    description:
+      "A number-led stacking tower that mixes counting, color recognition, and balancing play into one toy.",
+    shortDescription: "A number-stacking tower for early counting and balance skills.",
+    accent: "accent-gold",
+    artwork: "tower",
+    tags: ["Counting", "Learning", "Montessori"],
+    saleLabel: null,
+    rating: 5,
+    stock: "In stock",
+    sku: "AT-1022",
+  },
+  {
+    id: 23,
+    slug: "nebula-racer",
+    name: "Nebula Racer",
+    image: "/images/real/playroom-toys.jpg",
+    category: "Electronic",
+    categorySlug: "electronic",
+    price: 299,
+    description:
+      "A futuristic racer toy with bright styling, motion energy, and a premium giftable presentation.",
+    shortDescription: "A bold electronic racer made for fast-paced imaginative play.",
+    accent: "accent-caramel",
+    artwork: "car",
+    tags: ["Electronic", "Racing", "Premium"],
+    saleLabel: null,
+    rating: 5,
+    stock: "In stock",
+    sku: "AT-1023",
+  },
+  {
+    id: 24,
+    slug: "giggle-whale",
+    name: "Giggle Whale",
+    image: "/images/real/kids-playroom.jpg",
+    category: "Bath Toys",
+    categorySlug: "bath-toys",
+    price: 92,
+    description:
+      "A whale-shaped bath companion with a rounded silhouette and playful water-safe texture details.",
+    shortDescription: "A whale bath toy made for cheerful splashing and smiles.",
+    accent: "accent-sky",
+    artwork: "whale",
+    tags: ["Bath", "Gift", "Cute"],
+    saleLabel: "New",
+    rating: 4,
+    stock: "In stock",
+    sku: "AT-1024",
+  },
 ];
 
 export const reviewMediaItems: ReviewMediaItem[] = [
@@ -700,6 +967,21 @@ export const products: Product[] = baseProducts.map((product) => ({
   media: (product.media && product.media.length ? product.media : buildDefaultMedia(product)).slice(0, 4),
 }));
 
+const sortProductsByHeat = (left: Product, right: Product) => {
+  const leftIsHot = left.saleLabel === "Hot" ? 1 : 0;
+  const rightIsHot = right.saleLabel === "Hot" ? 1 : 0;
+
+  if (leftIsHot !== rightIsHot) {
+    return rightIsHot - leftIsHot;
+  }
+
+  if (left.rating !== right.rating) {
+    return right.rating - left.rating;
+  }
+
+  return right.id - left.id;
+};
+
 export const pageBanners = {
   services: {
     eyebrow: "Playful Support",
@@ -740,6 +1022,47 @@ export const pageBanners = {
 
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug);
+}
+
+export function getCategoryBySlug(slug: string) {
+  return categories.find((category) => category.slug === slug);
+}
+
+export function getProductsByCategorySlug(categorySlug: string) {
+  return products.filter((product) => product.categorySlug === categorySlug);
+}
+
+export function getShowcaseProductsByCategorySlug(categorySlug: string, limit = 4) {
+  return [...getProductsByCategorySlug(categorySlug)].sort(sortProductsByHeat).slice(0, limit);
+}
+
+export function getHotProductsByCategorySlug(categorySlug: string, limit = 3) {
+  const categoryProducts = getProductsByCategorySlug(categorySlug);
+  const hotProducts = categoryProducts.filter((product) => product.saleLabel === "Hot");
+
+  if (hotProducts.length >= limit) {
+    return hotProducts.sort(sortProductsByHeat).slice(0, limit);
+  }
+
+  return [...categoryProducts].sort(sortProductsByHeat).slice(0, limit);
+}
+
+export function getAllShopCategorySlugs() {
+  return Array.from(new Set(products.map((product) => product.categorySlug)));
+}
+
+export function getSuggestedCategorySlug(categorySlug: string) {
+  const orderedSlugs = Array.from(
+    new Set([...categories.map((category) => category.slug), ...getAllShopCategorySlugs()]),
+  );
+
+  const currentIndex = orderedSlugs.indexOf(categorySlug);
+
+  if (currentIndex === -1) {
+    return orderedSlugs[0];
+  }
+
+  return orderedSlugs[(currentIndex + 1) % orderedSlugs.length];
 }
 
 export function getBlogPostBySlug(slug: string) {

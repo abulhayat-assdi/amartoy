@@ -48,27 +48,17 @@ export default function AboutPage() {
           <div className="about-reimagined__visual">
             <div className="about-reimagined__photo about-reimagined__photo--main">
               <Image
-                alt="Colorful toys arranged on a play table"
+                alt="Happy child playing with a toy"
                 className="about-reimagined__image"
                 height={1200}
                 priority
-                src="/images/real/playroom-toys.jpg"
+                src="/images/real/kids-playroom.jpg"
                 width={1000}
               />
             </div>
 
-            <div className="about-reimagined__photo about-reimagined__photo--secondary">
-              <Image
-                alt="Kids enjoying toys together"
-                className="about-reimagined__image"
-                height={1000}
-                src="/images/real/kids-playroom.jpg"
-                width={900}
-              />
-            </div>
-
             <div className="about-reimagined__badge">
-              <span className="about-reimagined__badge-number">04</span>
+              <span className="about-reimagined__badge-number">1+</span>
               <span className="about-reimagined__badge-label">Years Experience</span>
             </div>
 

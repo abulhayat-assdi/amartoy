@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/data/site";
+import { CurrencyDisplay } from "@/components/ui/currency-display";
 import { useStore } from "@/components/providers/store-provider";
 
 export function CartPageClient() {
@@ -44,7 +44,7 @@ export function CartPageClient() {
         {cartItems.map((item) => (
           <div className="cart-table__row" key={item.id}>
             <div className="cart-table__product">
-              <div className={`cart-table__art ${item.accent}`}>
+              <div className="cart-table__art">
                 <Image alt={item.name} className="cart-table__image" height={900} src={item.image} width={900} />
               </div>
               <div>
@@ -52,7 +52,7 @@ export function CartPageClient() {
                 <p>{item.category}</p>
               </div>
             </div>
-            <span>{formatCurrency(item.price)}</span>
+            <span><CurrencyDisplay amount={item.price} /></span>
             <div className="qty-stepper">
               <button type="button" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
                 −
@@ -62,7 +62,7 @@ export function CartPageClient() {
                 +
               </button>
             </div>
-            <span>{formatCurrency(item.price * item.quantity)}</span>
+            <span><CurrencyDisplay amount={item.price * item.quantity} /></span>
             <button className="remove-btn" type="button" onClick={() => removeFromCart(item.id)}>
               <Trash2 size={18} />
             </button>
@@ -91,27 +91,27 @@ export function CartPageClient() {
             <Button onClick={applyCoupon}>Apply Coupon</Button>
           </div>
           {couponError && <p className="error">{couponError}</p>}
-          {discount > 0 && <p className="success">Discount applied: {formatCurrency(discount)}</p>}
+          {discount > 0 && <p className="success">Discount applied: <CurrencyDisplay amount={discount} /></p>}
         </div>
         <div className="summary-card">
           <h3>Cart Totals</h3>
           <div className="summary-row">
             <span>Subtotal</span>
-            <strong>{formatCurrency(subtotal)}</strong>
+            <strong><CurrencyDisplay amount={subtotal} /></strong>
           </div>
           {discount > 0 && (
             <div className="summary-row">
               <span>Discount</span>
-              <strong>-{formatCurrency(discount)}</strong>
+              <strong>-<CurrencyDisplay amount={discount} /></strong>
             </div>
           )}
           <div className="summary-row">
             <span>Shipping</span>
-            <strong>{formatCurrency(shipping)}</strong>
+            <strong><CurrencyDisplay amount={shipping} /></strong>
           </div>
           <div className="summary-row summary-row--total">
             <span>Total</span>
-            <strong>{formatCurrency(total)}</strong>
+            <strong><CurrencyDisplay amount={total} /></strong>
           </div>
           <Button className="checkout-btn" href="/checkout/">
             Proceed to Checkout
