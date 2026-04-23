@@ -38,6 +38,7 @@ interface StoreContextValue {
   addToCart: (id: number, quantity?: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
   removeFromCart: (id: number) => void;
+  removeManyFromCart: (ids: number[]) => void;
   clearCart: () => void;
 }
 
@@ -149,6 +150,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setCart((current) => current.filter((item) => item.id !== id));
   };
 
+  const removeManyFromCart = (ids: number[]) => {
+    const idSet = new Set(ids);
+    setCart((current) => current.filter((item) => !idSet.has(item.id)));
+  };
+
   const clearCart = () => {
     setCart([]);
   };
@@ -166,6 +172,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     addToCart,
     updateQuantity,
     removeFromCart,
+    removeManyFromCart,
     clearCart,
   };
 

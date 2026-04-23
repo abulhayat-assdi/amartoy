@@ -107,7 +107,7 @@ export function ReviewMediaCarousel() {
                 {previewSlides.map(({ item, tone }, index) => (
                   <article
                     key={`${item.id}-${tone}-${index}`}
-                    className={`review-card review-card--${tone}`}
+                    className={`review-carousel-card review-carousel-card--${tone}`}
                     role="button"
                     tabIndex={0}
                     onClick={() => setActiveItem(item)}
@@ -118,21 +118,21 @@ export function ReviewMediaCarousel() {
                       }
                     }}
                   >
-                    <div className="review-card__media">
+                    <div className="review-carousel-card__media">
                       <Image
                         alt={item.title}
-                        className="review-card__image"
+                        className="review-carousel-card__image"
                         fill
                         sizes="(max-width: 768px) 90vw, 68vw"
                         src={item.type === "video" && item.poster ? item.poster : item.src}
                       />
-                      <div className="review-card__overlay" />
-                      <div className="review-card__play">
+                      <div className="review-carousel-card__overlay" />
+                      <div className="review-carousel-card__play">
                         <Play size={24} fill="currentColor" />
                       </div>
                     </div>
 
-                    <div className="review-card__content">
+                    <div className="review-carousel-card__content">
                       <p>{item.description}</p>
                       <strong>{item.author}</strong>
                     </div>

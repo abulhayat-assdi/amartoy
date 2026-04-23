@@ -7,9 +7,37 @@ export interface StoredUser {
   gender?: string;
 }
 
+export interface StoredOrderItem {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+  quantity: number;
+}
+
+export interface StoredOrder {
+  id: string;
+  date: string;
+  orderedAt: string;
+  email: string;
+  phone: string;
+  customerName: string;
+  division: string;
+  district: string;
+  paymentMethod: string;
+  address: string;
+  subtotal: number;
+  shipping: number;
+  discount: number;
+  total: number;
+  items: StoredOrderItem[];
+  note: string;
+}
+
 const USERS_KEY = "amartoy-users";
 const CURRENT_USER_KEY = "amartoy-current-user";
 const LOGIN_FLAG_KEY = "amartoy-demo-user";
+const ORDERS_KEY = "amartoy-user-orders";
 
 function normalizeEmail(value: string): string {
   return value.trim().toLowerCase();
@@ -17,6 +45,15 @@ function normalizeEmail(value: string): string {
 
 function normalizeMobile(value: string): string {
   return value.replace(/\s+/g, "").trim();
+}
+
+function getOrderOwnerKey(user: Pick<StoredUser, "email" | "mobile">): string {
+  const email = normalizeEmail(user.email);
+  if (email) {
+    return `email:${email}`;
+  }
+
+  return `mobile:${normalizeMobile(user.mobile)}`;
 }
 
 export function getStoredUsers(): StoredUser[] {
@@ -35,6 +72,41 @@ export function getStoredUsers(): StoredUser[] {
   } catch {
     return [];
   }
+}
+
+export function getCurrentStoredUser(): StoredUser | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const raw = window.localStorage.getItem(CURRENT_USER_KEY);
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as StoredUser;
+    return parsed?.name ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+export function isStoredUserLoggedIn(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return window.localStorage.getItem(LOGIN_FLAG_KEY) === "1" && Boolean(getCurrentStoredUser());
+}
+
+export function logoutStoredUser() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.removeItem(LOGIN_FLAG_KEY);
+  window.localStorage.removeItem(CURRENT_USER_KEY);
 }
 
 export function registerStoredUser(user: StoredUser): { ok: true } | { ok: false; message: string } {
@@ -95,4 +167,57 @@ export function loginStoredUser(
   window.localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(matchedUser));
 
   return { ok: true };
+}
+
+export function getStoredOrdersForCurrentUser(): StoredOrder[] {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  const currentUser = getCurrentStoredUser();
+  if (!currentUser) {
+    return [];
+  }
+
+  const raw = window.localStorage.getItem(ORDERS_KEY);
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as Record<string, StoredOrder[]>;
+    const ownerKey = getOrderOwnerKey(currentUser);
+    const orders = parsed?.[ownerKey];
+    return Array.isArray(orders) ? orders : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveOrderForCurrentUser(order: StoredOrder) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const currentUser = getCurrentStoredUser();
+  if (!currentUser) {
+    return;
+  }
+
+  let allOrders: Record<string, StoredOrder[]> = {};
+  const raw = window.localStorage.getItem(ORDERS_KEY);
+
+  if (raw) {
+    try {
+      allOrders = JSON.parse(raw) as Record<string, StoredOrder[]>;
+    } catch {
+      allOrders = {};
+    }
+  }
+
+  const ownerKey = getOrderOwnerKey(currentUser);
+  const existingOrders = Array.isArray(allOrders[ownerKey]) ? allOrders[ownerKey] : [];
+  allOrders[ownerKey] = [order, ...existingOrders];
+
+  window.localStorage.setItem(ORDERS_KEY, JSON.stringify(allOrders));
 }

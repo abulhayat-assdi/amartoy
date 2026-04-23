@@ -1,83 +1,106 @@
 "use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 
-// Dummy data for demonstration
-const dummyProfile = {
-  name: "Demo User",
-  email: "demo@amartoy.com",
-  mobile: "01700000000",
-  childAge: 7,
-  offers: ["10% off on next order", "Free shipping for orders above 2000৳"],
-  orders: [
-    { id: "ORD-001", product: "Building Block Set", status: "Delivered" },
-    { id: "ORD-002", product: "Puzzle Set", status: "Processing" },
-  ],
-  wishlist: [
-    { id: 1, name: "Toy Car" },
-    { id: 2, name: "Doll House" },
-  ],
-  cart: [
-    { id: 3, name: "Action Figure" },
-  ],
-};
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { useStore } from "@/components/providers/store-provider";
+import {
+  getCurrentStoredUser,
+  getStoredOrdersForCurrentUser,
+  logoutStoredUser,
+  type StoredOrder,
+  type StoredUser,
+} from "@/lib/auth";
 
 export function ProfilePage() {
   const router = useRouter();
-  const [profile, setProfile] = useState<any>(null);
+  const { wishlistItems, cartItems } = useStore();
+  const [profile, setProfile] = useState<StoredUser | null>(null);
+  const [orders, setOrders] = useState<StoredOrder[]>([]);
 
   useEffect(() => {
-    // TODO: Replace with real user fetch/auth
-    setProfile(dummyProfile);
-  }, []);
+    const currentUser = getCurrentStoredUser();
 
-  if (!profile) return <div>Loading...</div>;
+    if (!currentUser) {
+      router.replace("/login/?redirect=/profile/");
+      return;
+    }
+
+    setProfile(currentUser);
+    setOrders(getStoredOrdersForCurrentUser());
+  }, [router]);
+
+  if (!profile) {
+    return <div className="container section">Loading...</div>;
+  }
 
   return (
     <section className="section">
-      <div className="container" style={{ maxWidth: 600 }}>
+      <div className="container" style={{ maxWidth: 760 }}>
         <h2>My Profile</h2>
-        <div className="detail-card" style={{ marginBottom: 24 }}>
+
+        <div className="detail-card" style={{ marginBottom: 24, padding: 24 }}>
           <div><b>Name:</b> {profile.name}</div>
-          <div><b>Email:</b> {profile.email}</div>
+          <div><b>Email:</b> {profile.email || "Not provided"}</div>
           <div><b>Mobile:</b> {profile.mobile}</div>
-          <div><b>Child's Age:</b> {profile.childAge}</div>
+          <div><b>Date of Birth:</b> {profile.dateOfBirth || "Not provided"}</div>
+          <div><b>Gender:</b> {profile.gender || "Not provided"}</div>
         </div>
-        <div className="detail-card" style={{ marginBottom: 24 }}>
-          <h3>Offers for you</h3>
-          <ul>
-            {profile.offers.map((offer: string, i: number) => (
-              <li key={i}>{offer}</li>
-            ))}
-          </ul>
+
+        <div className="detail-card" style={{ marginBottom: 24, padding: 24 }}>
+          <h3>My Orders</h3>
+          {orders.length ? (
+            <ul style={{ margin: "12px 0 0", paddingLeft: 20 }}>
+              {orders.map((order) => (
+                <li key={order.id} style={{ marginBottom: 12 }}>
+                  <div><b>{order.id}</b> - {order.date}</div>
+                  <div>{order.items.map((item) => `${item.name} x ${item.quantity}`).join(", ")}</div>
+                  <div><b>Total:</b> ৳{order.total}</div>
+                  <div><b>Status:</b> Order placed</div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p style={{ marginTop: 12 }}>You have not placed any orders yet.</p>
+          )}
         </div>
-        <div className="detail-card" style={{ marginBottom: 24 }}>
-          <h3>Orders</h3>
-          <ul>
-            {profile.orders.map((order: any) => (
-              <li key={order.id}>{order.product} - <b>{order.status}</b></li>
-            ))}
-          </ul>
-        </div>
-        <div className="detail-card" style={{ marginBottom: 24 }}>
+
+        <div className="detail-card" style={{ marginBottom: 24, padding: 24 }}>
           <h3>Wishlist</h3>
-          <ul>
-            {profile.wishlist.map((item: any) => (
-              <li key={item.id}>{item.name}</li>
-            ))}
-          </ul>
+          {wishlistItems.length ? (
+            <ul style={{ margin: "12px 0 0", paddingLeft: 20 }}>
+              {wishlistItems.map((item) => (
+                <li key={item.id}>{item.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <p style={{ marginTop: 12 }}>Your wishlist is empty.</p>
+          )}
         </div>
-        <div className="detail-card" style={{ marginBottom: 24 }}>
+
+        <div className="detail-card" style={{ marginBottom: 24, padding: 24 }}>
           <h3>Cart</h3>
-          <ul>
-            {profile.cart.map((item: any) => (
-              <li key={item.id}>{item.name}</li>
-            ))}
-          </ul>
+          {cartItems.length ? (
+            <ul style={{ margin: "12px 0 0", paddingLeft: 20 }}>
+              {cartItems.map((item) => (
+                <li key={item.id}>
+                  {item.name} x {item.quantity}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p style={{ marginTop: 12 }}>Your cart is empty.</p>
+          )}
         </div>
-        <Button onClick={() => router.push("/login/")}>Logout</Button>
+
+        <Button
+          onClick={() => {
+            logoutStoredUser();
+            router.push("/login/");
+          }}
+        >
+          Logout
+        </Button>
       </div>
     </section>
   );

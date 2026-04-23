@@ -1,13 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import { BadgeCheck, MapPinned, ShieldCheck, Truck } from "lucide-react";
+import { BadgeCheck, MapPinned, ShieldCheck, Trash2, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CurrencyDisplay } from "@/components/ui/currency-display";
 import { useStore } from "@/components/providers/store-provider";
 import { bangladeshAddressData, bangladeshDivisions } from "@/data/bangladesh-address";
+import {
+  getCurrentStoredUser,
+  isStoredUserLoggedIn,
+  saveOrderForCurrentUser,
+} from "@/lib/auth";
 
 type DeliveryAreaType = "union" | "city";
 type PaymentMethod = "ssl-bkash" | "ssl-nagad" | "ssl-rocket" | "ssl-card" | "cod";
@@ -66,8 +72,12 @@ const paymentOptions = [
 const inputClassName = (hasError: boolean) => clsx("form-input checkout-field", hasError && "error");
 
 export function CheckoutPageClient() {
-  const { cartItems, subtotal, clearCart } = useStore();
+  const { cartItems, removeManyFromCart } = useStore();
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [customerName, setCustomerName] = useState("");
+  const [checkoutItems, setCheckoutItems] = useState(cartItems);
 
   const [formData, setFormData] = useState<CheckoutFormState>({
     fullName: "",
@@ -87,25 +97,57 @@ export function CheckoutPageClient() {
   const [errors, setErrors] = useState<CheckoutErrors>({});
   const [couponStatus, setCouponStatus] = useState("");
 
-  const divisionOptions = bangladeshDivisions;
+  const divisionOptions = [...bangladeshDivisions].sort((a, b) => a.localeCompare(b));
   const districtOptions = useMemo(
-    () => bangladeshAddressData.find((division) => division.name === formData.division)?.districts ?? [],
+    () => {
+      const districts = bangladeshAddressData.find((division) => division.name === formData.division)?.districts ?? [];
+      return [...districts].sort((a, b) => a.name.localeCompare(b.name));
+    },
     [formData.division],
   );
   const selectedDistrict = districtOptions.find((district) => district.name === formData.district);
-  const upazilaOptions = selectedDistrict?.upazilas ?? [];
+  const upazilaOptions = [...(selectedDistrict?.upazilas ?? [])].sort((a, b) => a.name.localeCompare(b.name));
   const selectedUpazila = upazilaOptions.find((upazila) => upazila.name === formData.upazila);
-  const unionOptions = selectedUpazila?.unions ?? [];
+  const unionOptions = [...(selectedUpazila?.unions ?? [])].sort((a, b) => a.localeCompare(b));
   const areaType: DeliveryAreaType = selectedUpazila?.city ? "city" : "union";
+
+  useEffect(() => {
+    setCheckoutItems(cartItems);
+  }, [cartItems]);
+
+  const checkoutSubtotal = useMemo(
+    () => checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    [checkoutItems],
+  );
 
   const couponDetails = couponRules[formData.couponCode.trim().toUpperCase()];
   const discount = couponDetails
     ? couponDetails.discountType === "percent"
-      ? Math.round((subtotal * couponDetails.amount) / 100)
+      ? Math.round((checkoutSubtotal * couponDetails.amount) / 100)
       : couponDetails.amount
     : 0;
-  const shipping = subtotal > 0 ? (formData.division === "Dhaka" && formData.district === "Dhaka" ? 60 : 120) : 0;
-  const total = Math.max(subtotal + shipping - discount, 0);
+  const shipping =
+    checkoutSubtotal > 0 ? (formData.division === "Dhaka" && formData.district === "Dhaka" ? 60 : 120) : 0;
+  const total = Math.max(checkoutSubtotal + shipping - discount, 0);
+
+  useEffect(() => {
+    const currentUser = getCurrentStoredUser();
+    const loggedIn = isStoredUserLoggedIn();
+
+    setIsLoggedIn(loggedIn);
+    setCustomerName(currentUser?.name ?? "");
+
+    if (!currentUser) {
+      return;
+    }
+
+    setFormData((current) => ({
+      ...current,
+      fullName: current.fullName || currentUser.name || "",
+      email: current.email || currentUser.email || "",
+      phone: current.phone || currentUser.mobile || "",
+    }));
+  }, []);
 
   const setField = <K extends keyof CheckoutFormState>(field: K, value: CheckoutFormState[K]) => {
     setFormData((current) => ({ ...current, [field]: value }));
@@ -185,10 +227,42 @@ export function CheckoutPageClient() {
     setErrors((current) => ({ ...current, couponCode: "Coupon code is not valid." }));
   };
 
+  const focusFirstInvalidField = (nextErrors: CheckoutErrors) => {
+    const fieldPriority: (keyof CheckoutFormState)[] = [
+      "fullName",
+      "phone",
+      "secondaryPhone",
+      "email",
+      "division",
+      "district",
+      "upazila",
+      ...(areaType === "union" ? (["union", "deliveryPoint"] as const) : (["cityAddress"] as const)),
+      "paymentMethod",
+      "couponCode",
+    ];
+
+    const firstInvalidField = fieldPriority.find((field) => nextErrors[field]);
+
+    if (!firstInvalidField || !formRef.current) {
+      return;
+    }
+
+    const target = formRef.current.querySelector<HTMLElement>(`[name="${firstInvalidField}"]`);
+
+    if (!target) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+      target.focus();
+    });
+  };
+
   const validate = () => {
     const nextErrors: CheckoutErrors = {};
 
-    if (!cartItems.length) {
+    if (!checkoutItems.length) {
       nextErrors.fullName = "Add at least one product before checkout.";
     }
 
@@ -216,6 +290,9 @@ export function CheckoutPageClient() {
     if (formData.couponCode.trim() && !couponDetails) nextErrors.couponCode = "Coupon code is not valid.";
 
     setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      focusFirstInvalidField(nextErrors);
+    }
     return Object.keys(nextErrors).length === 0;
   };
 
@@ -234,26 +311,30 @@ export function CheckoutPageClient() {
     const order = {
       id: `AT-${Date.now()}`,
       date: new Date().toLocaleDateString("en-GB"),
+      orderedAt: new Date().toISOString(),
       email: formData.email,
       phone: formData.phone,
       customerName: formData.fullName,
+      division: formData.division,
+      district: formData.district,
       paymentMethod:
         paymentOptions.find((option) => option.value === formData.paymentMethod)?.title ?? formData.paymentMethod,
       address: fullAddress,
-      subtotal,
+      subtotal: checkoutSubtotal,
       shipping,
       discount,
       total,
-      items: cartItems,
+      items: checkoutItems,
       note: formData.orderNote,
     };
 
     localStorage.setItem("lastOrder", JSON.stringify(order));
-    clearCart();
+    saveOrderForCurrentUser(order);
+    removeManyFromCart(checkoutItems.map((item) => item.id));
     router.push("/order-success/");
   };
 
-  if (!cartItems.length) {
+  if (!checkoutItems.length) {
     return (
       <div className="empty-card checkout-empty">
         <ShieldCheck size={42} />
@@ -266,12 +347,23 @@ export function CheckoutPageClient() {
 
   return (
     <div className="checkout-layout checkout-layout--premium">
-      <form className="detail-card checkout-form checkout-form--premium" onSubmit={handleSubmit}>
+      <form className="detail-card checkout-form checkout-form--premium" onSubmit={handleSubmit} ref={formRef}>
         <div className="checkout-form__section">
           <div className="checkout-form__section-head">
             <div>
               <p className="checkout-kicker">Customer Details</p>
               <h2>Delivery Information</h2>
+              <p className="checkout-login-prompt">
+                {isLoggedIn ? (
+                  <>
+                    Returning customer? <Link href="/profile/">{customerName}</Link>
+                  </>
+                ) : (
+                  <>
+                    Returning customer? <Link href="/login/?redirect=/checkout/">Click here to login</Link>
+                  </>
+                )}
+              </p>
             </div>
             <div className="checkout-badge">
               <ShieldCheck size={16} />
@@ -284,6 +376,7 @@ export function CheckoutPageClient() {
               <span className="form-label">Full Name</span>
               <input
                 className={inputClassName(Boolean(errors.fullName))}
+                name="fullName"
                 placeholder="Your Name"
                 type="text"
                 value={formData.fullName}
@@ -296,6 +389,7 @@ export function CheckoutPageClient() {
               <span className="form-label">Mobile Number</span>
               <input
                 className={inputClassName(Boolean(errors.phone))}
+                name="phone"
                 placeholder="01XXXXXXXXX"
                 type="tel"
                 value={formData.phone}
@@ -308,6 +402,7 @@ export function CheckoutPageClient() {
               <span className="form-label">Alternate Mobile Number (Optional)</span>
               <input
                 className={inputClassName(Boolean(errors.secondaryPhone))}
+                name="secondaryPhone"
                 placeholder="Optional"
                 type="tel"
                 value={formData.secondaryPhone}
@@ -320,6 +415,7 @@ export function CheckoutPageClient() {
               <span className="form-label">Email (Optional)</span>
               <input
                 className={inputClassName(Boolean(errors.email))}
+                name="email"
                 placeholder="name@email.com"
                 type="email"
                 value={formData.email}
@@ -347,6 +443,7 @@ export function CheckoutPageClient() {
               <span className="form-label">Division</span>
               <select
                 className={clsx("form-input checkout-field", errors.division && "error")}
+                name="division"
                 value={formData.division}
                 onChange={(event) => handleDivisionChange(event.target.value)}
               >
@@ -364,6 +461,7 @@ export function CheckoutPageClient() {
               <span className="form-label">District</span>
               <select
                 className={clsx("form-input checkout-field", errors.district && "error")}
+                name="district"
                 value={formData.district}
                 onChange={(event) => handleDistrictChange(event.target.value)}
               >
@@ -381,6 +479,7 @@ export function CheckoutPageClient() {
               <span className="form-label">Upazila / Thana</span>
               <select
                 className={clsx("form-input checkout-field", errors.upazila && "error")}
+                name="upazila"
                 value={formData.upazila}
                 onChange={(event) => handleUpazilaChange(event.target.value)}
               >
@@ -397,9 +496,10 @@ export function CheckoutPageClient() {
             {areaType === "union" ? (
               <>
                 <label className="form-group">
-                  <span className="form-label">Union</span>
+                  <span className="form-label">Union / Area</span>
                   <select
                     className={clsx("form-input checkout-field", errors.union && "error")}
+                    name="union"
                     value={formData.union}
                     onChange={(event) => setField("union", event.target.value)}
                   >
@@ -414,10 +514,11 @@ export function CheckoutPageClient() {
                 </label>
 
                 <label className="form-group form-group--full">
-                  <span className="form-label">Post Office / Delivery Point</span>
+                  <span className="form-label">Delivery Point / Road & House</span>
                   <input
                     className={inputClassName(Boolean(errors.deliveryPoint))}
-                    placeholder="Example: In front of Kaliakair Post Office / Main Market / School Gate"
+                    name="deliveryPoint"
+                    placeholder="Example: Road-5, House-12 / In front of Post Office / Main Market"
                     type="text"
                     value={formData.deliveryPoint}
                     onChange={(event) => setField("deliveryPoint", event.target.value)}
@@ -430,6 +531,7 @@ export function CheckoutPageClient() {
                 <span className="form-label">Detailed Address</span>
                 <textarea
                   className={clsx("form-input checkout-field checkout-field--textarea", errors.cityAddress && "error")}
+                  name="cityAddress"
                   placeholder="Write road number, house number, floor, block, area and any extra landmark"
                   rows={4}
                   value={formData.cityAddress}
@@ -455,6 +557,7 @@ export function CheckoutPageClient() {
               <div className="checkout-coupon__row">
                 <input
                   className={inputClassName(Boolean(errors.couponCode))}
+                  name="couponCode"
                   placeholder="Enter coupon if you have one"
                   type="text"
                   value={formData.couponCode}
@@ -508,6 +611,7 @@ export function CheckoutPageClient() {
             <span className="form-label">Order Note (Optional)</span>
             <textarea
               className="form-input checkout-field checkout-field--textarea"
+              name="orderNote"
               placeholder="Write any delivery instruction if needed"
               rows={3}
               value={formData.orderNote}
@@ -533,22 +637,35 @@ export function CheckoutPageClient() {
             <p className="checkout-kicker">Order Summary</p>
             <h3>Complete Your Checkout</h3>
           </div>
-          <span>{cartItems.length} item(s)</span>
+          <span>{checkoutItems.length} item(s)</span>
         </div>
 
         <div className="checkout-summary__items">
-          {cartItems.map((item) => (
+          {checkoutItems.map((item) => (
             <div className="checkout-summary__item" key={item.id}>
               <div className="checkout-summary__thumb">
                 <img alt={item.name} src={item.image} />
               </div>
-              <div>
+              <div className="checkout-summary__item-copy">
                 <strong>{item.name}</strong>
                 <span>
                   {item.quantity} x <CurrencyDisplay amount={item.price} />
                 </span>
               </div>
-              <strong><CurrencyDisplay amount={item.quantity * item.price} /></strong>
+              <div className="checkout-summary__item-side">
+                <strong><CurrencyDisplay amount={item.quantity * item.price} /></strong>
+                {checkoutItems.length > 1 ? (
+                  <button
+                    aria-label={`Remove ${item.name} from checkout`}
+                    className="checkout-summary__remove"
+                    type="button"
+                    onClick={() => setCheckoutItems((current) => current.filter((entry) => entry.id !== item.id))}
+                  >
+                    <Trash2 size={14} />
+                    <span>Remove</span>
+                  </button>
+                ) : null}
+              </div>
             </div>
           ))}
         </div>
@@ -556,7 +673,7 @@ export function CheckoutPageClient() {
         <div className="checkout-summary__meta">
           <div className="summary-row">
             <span>Subtotal</span>
-            <strong><CurrencyDisplay amount={subtotal} /></strong>
+            <strong><CurrencyDisplay amount={checkoutSubtotal} /></strong>
           </div>
           <div className="summary-row">
             <span>Delivery Charge</span>

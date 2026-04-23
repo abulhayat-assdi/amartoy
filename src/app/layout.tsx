@@ -5,6 +5,7 @@ import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import "@/app/globals.css";
 import { StoreProvider } from "@/components/providers/store-provider";
+import { SupportChatProvider } from "@/components/providers/support-chat-provider";
 import { AppShell } from "@/components/layout/app-shell";
 
 export const metadata: Metadata = {
@@ -18,7 +19,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" data-scroll-behavior="smooth">
       <body>
         <StoreProvider>
-          <AppShell>{children}</AppShell>
+          <SupportChatProvider>
+            <AppShell>{children}</AppShell>
+          </SupportChatProvider>
         </StoreProvider>
       </body>
     </html>

@@ -63,23 +63,24 @@ export function TestimonialsSection({ compact = false }: { compact?: boolean }) 
               About Us
             </Button>
 
-            {/* Navigation Arrows */}
-            <div className="testimonials-section__nav">
-              <button
-                aria-label="Previous review"
-                className="testimonials-section__nav-btn"
-                onClick={() => { prev(); resetTimer(); }}
-              >
-                <ChevronLeft size={22} />
-              </button>
-              <button
-                aria-label="Next review"
-                className="testimonials-section__nav-btn"
-                onClick={() => { next(); resetTimer(); }}
-              >
-                <ChevronRight size={22} />
-              </button>
-            </div>
+            {!compact ? (
+              <div className="testimonials-section__nav">
+                <button
+                  aria-label="Previous review"
+                  className="testimonials-section__nav-btn"
+                  onClick={() => { prev(); resetTimer(); }}
+                >
+                  <ChevronLeft size={22} />
+                </button>
+                <button
+                  aria-label="Next review"
+                  className="testimonials-section__nav-btn"
+                  onClick={() => { next(); resetTimer(); }}
+                >
+                  <ChevronRight size={22} />
+                </button>
+              </div>
+            ) : null}
 
             {/* Dots */}
             <div className="testimonials-section__dots">

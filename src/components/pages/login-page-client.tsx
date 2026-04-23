@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { loginStoredUser } from "@/lib/auth";
@@ -13,6 +13,8 @@ export function LoginPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTarget = searchParams.get("redirect") || "/profile/";
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,7 +26,7 @@ export function LoginPage() {
 
     const result = loginStoredUser(credential.trim(), password);
     if (result.ok) {
-      router.push("/profile/");
+      router.push(redirectTarget);
       return;
     }
 
