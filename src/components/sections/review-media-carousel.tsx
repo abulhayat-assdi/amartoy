@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 import { reviewMediaItems } from "@/data/site";
+import type { HomeReviewMediaItem } from "@/types/homepage";
 import type { ReviewMediaItem } from "@/types/site";
 
 function getLoopedIndex(index: number, length: number) {
@@ -14,10 +15,12 @@ function getLoopedIndex(index: number, length: number) {
   return (index + length) % length;
 }
 
-export function ReviewMediaCarousel() {
-  const [activeItem, setActiveItem] = useState<ReviewMediaItem | null>(null);
+type CarouselItem = ReviewMediaItem | HomeReviewMediaItem;
+
+export function ReviewMediaCarousel({ items = reviewMediaItems }: { items?: CarouselItem[] }) {
+  const [activeItem, setActiveItem] = useState<CarouselItem | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const slides = useMemo(() => reviewMediaItems, []);
+  const slides = useMemo(() => items, [items]);
 
   useEffect(() => {
     if (!activeItem) {

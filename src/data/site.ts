@@ -1069,6 +1069,12 @@ export function getBlogPostBySlug(slug: string) {
   return blogPosts.find((post) => post.slug === slug);
 }
 
+export function getLatestBlogPosts(limit = 3) {
+  return [...blogPosts]
+    .sort((left, right) => new Date(right.date).getTime() - new Date(left.date).getTime())
+    .slice(0, limit);
+}
+
 export function formatCurrency(value: number): string {
   const formattedNumber = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,

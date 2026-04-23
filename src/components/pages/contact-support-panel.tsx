@@ -14,36 +14,16 @@ import {
   Square,
   X,
 } from "lucide-react";
-import { company } from "@/data/site";
 import { useSupportChat } from "@/components/providers/support-chat-provider";
+import type { ContactChannelIcon } from "@/types/contactpage";
 
-const contactChannels = [
-  {
-    label: "WhatsApp",
-    href: "https://wa.me/8801700000000?text=Hi%20AmarToy%20Support",
-    icon: MessageCircle,
-  },
-  {
-    label: "Messenger",
-    href: "https://m.me/amartoy",
-    icon: SendHorizonal,
-  },
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/amartoy",
-    icon: Camera,
-  },
-  {
-    label: "Email",
-    href: `mailto:${company.supportEmail}?subject=Support%20Request`,
-    icon: Mail,
-  },
-  {
-    label: "Call",
-    href: `tel:${company.phone.replace(/\s+/g, "")}`,
-    icon: Phone,
-  },
-];
+function ChannelIcon({ icon, size = 18 }: { icon: ContactChannelIcon; size?: number }) {
+  if (icon === "whatsapp") return <MessageCircle size={size} />;
+  if (icon === "messenger") return <SendHorizonal size={size} />;
+  if (icon === "instagram") return <Camera size={size} />;
+  if (icon === "email") return <Mail size={size} />;
+  return <Phone size={size} />;
+}
 
 function formatBytes(size: number) {
   if (size <= 0) {
@@ -77,7 +57,7 @@ export function ContactSupportPanel({
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const recorderChunksRef = useRef<Blob[]>([]);
-  const { maxAttachmentBytes, messages, sendMessage } = useSupportChat();
+  const { maxAttachmentBytes, messages, sendMessage, chatSettings, channels } = useSupportChat();
   const maxAttachmentLabel = useMemo(
     () => `${Math.round(maxAttachmentBytes / (1024 * 1024))}MB`,
     [maxAttachmentBytes],
@@ -258,10 +238,10 @@ export function ContactSupportPanel({
           </>
         ) : (
           <>
-            <div className="contact-support__avatar">A</div>
+            <div className="contact-support__avatar">{chatSettings.avatarLetter}</div>
             <div className="contact-support__meta">
-              <strong>AmarToy</strong>
-              <span>Live Support</span>
+              <strong>{chatSettings.brandName}</strong>
+              <span>{chatSettings.supportStatusText}</span>
             </div>
           </>
         )}
@@ -349,7 +329,7 @@ export function ContactSupportPanel({
         <label className="contact-support__input">
           <textarea
             ref={textareaRef}
-            placeholder="Compose your message..."
+            placeholder={chatSettings.composerPlaceholder}
             rows={1}
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
@@ -385,7 +365,7 @@ export function ContactSupportPanel({
       </form>
 
       <div className="contact-support__status">
-        <span>Bangla + English supported</span>
+        <span>{chatSettings.statusBarText}</span>
         <span>{formatBytes(totalPendingBytes)} / {maxAttachmentLabel}</span>
       </div>
 
@@ -395,18 +375,16 @@ export function ContactSupportPanel({
         <div className="contact-support__footer">
           <p>Message us directly</p>
           <div className="contact-support__channels">
-            {contactChannels.map((channel) => {
-              const Icon = channel.icon;
-
+            {channels.filter((c) => c.enabled).map((channel) => {
               return (
                 <Link
-                  key={channel.label}
+                  key={channel.id}
                   className="contact-support__channel"
                   href={channel.href}
                   rel="noreferrer"
                   target="_blank"
                 >
-                  <Icon size={18} />
+                  <ChannelIcon icon={channel.icon} size={18} />
                   <span>{channel.label}</span>
                 </Link>
               );

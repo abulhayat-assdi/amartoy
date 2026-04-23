@@ -1,14 +1,13 @@
-import { AdminTablePageClient } from "@/components/admin/admin-table-page-client";
-import { adminContactRows, adminPageContent } from "@/data/admin";
+import { ContactManagementClient } from "@/components/admin/contact-management-client";
+import { getContactPageContent } from "@/lib/contactpage-management";
 
-export default function AdminContactsPage() {
+export default async function AdminContactsPage() {
+  const content = await getContactPageContent();
+
   return (
-    <AdminTablePageClient
-      columnLabels={["Type", "Stage"]}
-      description={adminPageContent.contacts.description}
-      eyebrow={adminPageContent.contacts.eyebrow}
-      rows={adminContactRows}
-      title={adminPageContent.contacts.title}
+    <ContactManagementClient
+      initialContent={content}
+      updatedAtLabel={content.updatedAt || "Draft not saved yet"}
     />
   );
 }

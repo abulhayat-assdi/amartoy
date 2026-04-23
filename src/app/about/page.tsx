@@ -1,46 +1,11 @@
-import Image from "next/image";
 import { TestimonialsSection } from "@/components/sections/testimonials-section";
+import { getAboutPageContent } from "@/lib/aboutpage-management";
+import Image from "next/image";
 
-const aboutHighlights = [
-  {
-    number: "01",
-    title: "We are online store located in the Dhaka city",
-    description:
-      "Experience a toy shop designed for busy families, with playful products and a smooth online ordering journey.",
-  },
-  {
-    number: "02",
-    title: "Freshly curated toy collections",
-    description:
-      "We carefully choose safe, joyful, and age-friendly toys so every collection feels thoughtful and exciting.",
-  },
-  {
-    number: "03",
-    title: "Next day delivery in Dhaka city",
-    description:
-      "Fast local fulfillment helps families receive gift-worthy picks and everyday favorites right on time.",
-  },
-  {
-    number: "04",
-    title: "Professional, experienced team",
-    description:
-      "Our team is focused on dependable service, helpful guidance, and a shopping experience parents can trust.",
-  },
-  {
-    number: "05",
-    title: "The highest standards of service",
-    description:
-      "From order confirmation to delivery updates, we work to keep each customer touchpoint clear and reliable.",
-  },
-  {
-    number: "06",
-    title: "Cash on delivery available",
-    description:
-      "Flexible payment options make ordering simpler, especially for families who prefer to pay at the doorstep.",
-  },
-];
+export default async function AboutPage() {
+  const content = await getAboutPageContent();
+  const { heroSection, highlights } = content;
 
-export default function AboutPage() {
   return (
     <>
       <section className="about-reimagined">
@@ -52,14 +17,14 @@ export default function AboutPage() {
                 className="about-reimagined__image"
                 height={1200}
                 priority
-                src="/images/real/kids-playroom.jpg"
+                src={heroSection.imageUrl || "/images/real/kids-playroom.jpg"}
                 width={1000}
               />
             </div>
 
             <div className="about-reimagined__badge">
-              <span className="about-reimagined__badge-number">1+</span>
-              <span className="about-reimagined__badge-label">Years Experience</span>
+              <span className="about-reimagined__badge-number">{heroSection.badgeNumber}</span>
+              <span className="about-reimagined__badge-label">{heroSection.badgeLabel}</span>
             </div>
 
             <span className="about-reimagined__dot about-reimagined__dot--one" />
@@ -71,29 +36,14 @@ export default function AboutPage() {
           </div>
 
           <div className="about-reimagined__content">
-            <p className="about-reimagined__eyebrow">About AmarToy</p>
-            <h1>We are doing more than you expect</h1>
+            <p className="about-reimagined__eyebrow">{heroSection.eyebrow}</p>
+            <h1>{heroSection.title}</h1>
             <div className="about-reimagined__copy">
-              <p>
-                Welcome to AmarToy, where every collection is shaped around safe play,
-                imagination, and dependable service for families across Dhaka. What started as a
-                simple goal to make toy shopping easier has grown into an online store focused on
-                joyful discovery and trusted quality.
-              </p>
-              <p>
-                We believe the best children&apos;s products bring together creativity, comfort, and
-                long-lasting value. That is why we handpick toys that feel fun, giftable, and
-                practical for everyday moments, from learning through play to celebrating special
-                milestones.
-              </p>
-              <p>
-                Our mission is to make each order feel easy and reassuring, whether you are
-                choosing a birthday surprise or stocking up on family favorites. With responsive
-                service, curated selections, and fast delivery, we work to give parents a smoother
-                shopping experience from start to finish.
-              </p>
+              {heroSection.paragraph1 && <p>{heroSection.paragraph1}</p>}
+              {heroSection.paragraph2 && <p>{heroSection.paragraph2}</p>}
+              {heroSection.paragraph3 && <p>{heroSection.paragraph3}</p>}
             </div>
-            <p className="about-reimagined__signature">AmarToy Store</p>
+            <p className="about-reimagined__signature">{heroSection.signature}</p>
           </div>
         </div>
       </section>
@@ -101,8 +51,8 @@ export default function AboutPage() {
       <section className="about-reimagined-points">
         <div className="container">
           <div className="about-reimagined-points__grid">
-            {aboutHighlights.map((item) => (
-              <article className="about-reimagined-points__item" key={item.number}>
+            {highlights.map((item) => (
+              <article className="about-reimagined-points__item" key={item.id}>
                 <span className="about-reimagined-points__number">{item.number}</span>
                 <div className="about-reimagined-points__body">
                   <h2>{item.title}</h2>

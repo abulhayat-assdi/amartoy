@@ -1,27 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BadgeDollarSign,
-  CircleHelp,
-  PackageCheck,
-  ShieldCheck,
-  ShoppingBag,
-} from "lucide-react";
-import { blogPosts, categories, features, formatCurrency, products } from "@/data/site";
-import { ProductCard } from "@/components/ui/product-card";
+import { ArrowRight, BadgeDollarSign, CircleHelp, PackageCheck, ShieldCheck } from "lucide-react";
+import { blogPosts, products } from "@/data/site";
+import { HomeVideoSection } from "@/components/sections/home-video-section";
 import { HeroSlider } from "@/components/sections/hero-slider";
 import { ReviewMediaCarousel } from "@/components/sections/review-media-carousel";
+import { ProductCard } from "@/components/ui/product-card";
+import { getHomePageContent, getHomepagePopularProducts, getLatestBlogPosts } from "@/lib/homepage-management";
 
-const featuredProducts = products.slice(0, 8);
-const featuredPosts = [blogPosts[2], blogPosts[0], blogPosts[3]];
+const featureIcons = {
+  "badge-dollar-sign": BadgeDollarSign,
+  "package-check": PackageCheck,
+  "shield-check": ShieldCheck,
+  "message-circle": CircleHelp,
+};
 
-const featureIcons = [BadgeDollarSign, PackageCheck, ShoppingBag, CircleHelp];
+export default async function HomePage() {
+  const homepageContent = await getHomePageContent();
+  const featuredProducts = getHomepagePopularProducts(homepageContent, products);
+  const featuredPosts = getLatestBlogPosts(blogPosts, homepageContent.blogSection.limit);
 
-export default function HomePage() {
   return (
     <>
-      <HeroSlider />
+      <HeroSlider
+        slides={homepageContent.heroSlides.map((slide) => ({
+          ...slide,
+          image: slide.imageUrl,
+        }))}
+      />
 
       <section className="home-section home-section--tight">
         <div className="container">
@@ -31,9 +37,9 @@ export default function HomePage() {
           </div>
 
           <div className="home-categories-grid">
-            {categories.map((category) => (
+            {homepageContent.categories.map((category) => (
               <Link className="home-category-card" href={category.href} key={category.id}>
-                <Image alt={category.name} fill className="home-category-card__image" src={category.image} />
+                <Image alt={category.name} fill className="home-category-card__image" src={category.imageUrl} />
                 <div className="home-category-card__overlay" />
                 <div className="home-category-card__content">
                   <h3>{category.name}</h3>
@@ -48,13 +54,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <ReviewMediaCarousel />
+      <ReviewMediaCarousel items={homepageContent.reviewMedia} />
 
       <section className="home-section home-section--soft">
         <div className="container">
           <div className="home-section__heading home-section__heading--center">
-            <p className="home-kicker">Shop AmarToy Toys & Games</p>
-            <h2>Popular in Store</h2>
+            <p className="home-kicker">{homepageContent.popularProductsSection.eyebrow}</p>
+            <h2>{homepageContent.popularProductsSection.title}</h2>
+            <p>{homepageContent.popularProductsSection.description}</p>
           </div>
 
           <div className="grid-3 product-grid">
@@ -67,11 +74,11 @@ export default function HomePage() {
 
       <section className="home-features-strip">
         <div className="container home-features-strip__inner">
-          {features.map((feature, index) => {
-            const Icon = featureIcons[index] ?? ShieldCheck;
+          {homepageContent.features.map((feature) => {
+            const Icon = featureIcons[feature.icon as keyof typeof featureIcons] ?? ShieldCheck;
 
             return (
-              <div className="home-feature-item" key={feature.title}>
+              <div className="home-feature-item" key={feature.id}>
                 <div className="home-feature-item__icon">
                   <Icon size={26} />
                 </div>
@@ -87,36 +94,44 @@ export default function HomePage() {
 
       <section className="home-promo-banner">
         <Image
-          alt="Happy kids outdoors"
+          alt={homepageContent.promoSection.title}
           className="home-promo-banner__image"
           fill
           sizes="100vw"
-          src="/images/real/happy-outdoors.jpg"
+          src={homepageContent.promoSection.imageUrl}
         />
         <div className="home-promo-banner__overlay" />
-        <div className="home-promo-banner__play">
-          <span>Play</span>
+        <div className="home-promo-banner__content">
+          <p>{homepageContent.promoSection.eyebrow}</p>
+          <h2>{homepageContent.promoSection.title}</h2>
+          <span>{homepageContent.promoSection.description}</span>
+          <Link className="home-promo-banner__button" href={homepageContent.promoSection.buttonHref}>
+            {homepageContent.promoSection.buttonLabel}
+          </Link>
         </div>
       </section>
+
+      <HomeVideoSection content={homepageContent.videoSection} />
 
       <section className="home-section">
         <div className="container">
           <div className="home-section__heading home-section__heading--center">
-            <p className="home-kicker">Our Blog</p>
-            <h2>Latest News</h2>
+            <p className="home-kicker">{homepageContent.blogSection.eyebrow}</p>
+            <h2>{homepageContent.blogSection.title}</h2>
+            <p>{homepageContent.blogSection.description}</p>
           </div>
 
           <div className="home-blog-grid">
             {featuredPosts.map((post) => (
               <article className="home-blog-card" key={post.id}>
-                <Link className="home-blog-card__image-wrap" href="/blog/">
+                <Link className="home-blog-card__image-wrap" href={`/blog/${post.slug}/`}>
                   <Image alt={post.title} fill className="home-blog-card__image" src={post.image} />
                 </Link>
                 <div className="home-blog-card__meta">
                   <span>{post.category}</span>
                   <span>{post.date}</span>
                 </div>
-                <Link className="home-blog-card__title" href="/blog/">
+                <Link className="home-blog-card__title" href={`/blog/${post.slug}/`}>
                   {post.title}
                 </Link>
               </article>

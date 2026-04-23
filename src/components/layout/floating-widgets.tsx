@@ -10,7 +10,7 @@ export function FloatingWidgets() {
   const [showTop, setShowTop] = useState(false);
   const [widgetVisible, setWidgetVisible] = useState(false);
   const [widgetClosing, setWidgetClosing] = useState(false);
-  const { isOpen, closeChat, openChat, toggleChat, unreadCount } = useSupportChat();
+  const { isOpen, closeChat, openChat, toggleChat, unreadCount, chatSettings } = useSupportChat();
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 500);
@@ -89,7 +89,7 @@ export function FloatingWidgets() {
           <MessageCircle size={18} />
           {unreadCount > 0 ? <span className="floating-chat__badge">{unreadCount}</span> : null}
         </div>
-        <span className="floating-chat__label">Please Chat</span>
+        <span className="floating-chat__label">{chatSettings.chatButtonLabel}</span>
       </button>
 
       <div className="floating-rail">

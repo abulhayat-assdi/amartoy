@@ -7,7 +7,20 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { heroSlides } from "@/data/site";
 import { Button } from "@/components/ui/button";
 
-export function HeroSlider() {
+type HeroSliderSlide = {
+  id: string | number;
+  eyebrow: string;
+  title: string;
+  description: string;
+  cta?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  image: string;
+  imageUrl?: string;
+  accent: string;
+};
+
+export function HeroSlider({ slides = heroSlides }: { slides?: HeroSliderSlide[] }) {
   return (
     <section className="hero-slider">
       <Swiper
@@ -18,7 +31,7 @@ export function HeroSlider() {
         pagination={{ clickable: true }}
         className="hero-swiper"
       >
-        {heroSlides.map((slide, index) => (
+        {slides.map((slide, index) => (
           <SwiperSlide key={slide.id}>
             <div className={`hero-slide hero-slide--${slide.accent}`}>
               <Image
@@ -27,7 +40,7 @@ export function HeroSlider() {
                 fill
                 priority={index === 0}
                 sizes="100vw"
-                src={slide.image}
+                src={slide.imageUrl || slide.image}
               />
               <div className="hero-slide__overlay" />
               <div className="container hero-slide__inner">
@@ -35,8 +48,8 @@ export function HeroSlider() {
                   <p className="hero-slide__eyebrow">{slide.eyebrow}</p>
                   <h1 className="hero-slide__title">{slide.title}</h1>
                   <p className="hero-slide__description">{slide.description}</p>
-                  <Button className="hero-slide__cta" href="/shop/">
-                    {slide.cta}
+                  <Button className="hero-slide__cta" href={slide.ctaHref || "/shop/"}>
+                    {slide.ctaLabel || slide.cta || "Discover Now"}
                   </Button>
                 </div>
               </div>

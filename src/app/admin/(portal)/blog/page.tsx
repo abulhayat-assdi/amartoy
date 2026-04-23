@@ -1,14 +1,13 @@
-import { AdminTablePageClient } from "@/components/admin/admin-table-page-client";
-import { adminBlogRows, adminPageContent } from "@/data/admin";
+import { BlogManagementClient } from "@/components/admin/blog-management-client";
+import { getBlogPageContent } from "@/lib/blogpage-management";
 
-export default function AdminBlogPage() {
+export default async function AdminBlogPage() {
+  const content = await getBlogPageContent();
+
   return (
-    <AdminTablePageClient
-      columnLabels={["Published", "Performance"]}
-      description={adminPageContent.blog.description}
-      eyebrow={adminPageContent.blog.eyebrow}
-      rows={adminBlogRows}
-      title={adminPageContent.blog.title}
+    <BlogManagementClient
+      initialContent={content}
+      updatedAtLabel={content.updatedAt || "Draft not saved yet"}
     />
   );
 }

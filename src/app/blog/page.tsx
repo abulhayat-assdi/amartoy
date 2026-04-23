@@ -1,22 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { blogPosts } from "@/data/site";
+import { getBlogPageContent, getPublishedPosts } from "@/lib/blogpage-management";
 
-export default function BlogPage() {
-  const featuredPosts = blogPosts.slice(3);
-  const recentPosts = blogPosts.slice(0, 2);
+export default async function BlogPage() {
+  const content = await getBlogPageContent();
+  const published = getPublishedPosts(content);
+
+  // Mirror the original layout: first 2 = recent sidebar, rest = main grid
+  const featuredPosts = published.slice(2);
+  const recentPosts = published.slice(0, 2);
+
+  const { header, sidebarBanner } = content;
 
   return (
     <section className="blog-page">
       <div className="container">
         <header className="blog-page__hero">
-          <p className="blog-page__eyebrow">Our Blog</p>
-          <h1>Blog</h1>
-          <p>
-            Parenting ideas, toy stories, and playful inspiration arranged in an editorial-style
-            visual grid.
-          </p>
+          <p className="blog-page__eyebrow">{header.eyebrow}</p>
+          <h1>{header.title}</h1>
+          <p>{header.description}</p>
         </header>
 
         <div className="blog-page__layout">
@@ -78,17 +81,17 @@ export default function BlogPage() {
                 </div>
               </div>
 
-              <Link className="blog-sidebar__banner" href="/shop/">
+              <Link className="blog-sidebar__banner" href={sidebarBanner.href}>
                 <Image
-                  alt="Happy kids enjoying AmarToy collection"
+                  alt={sidebarBanner.tagline}
                   fill
                   className="blog-sidebar__banner-image"
-                  src="/images/real/happy-outdoors.jpg"
+                  src={sidebarBanner.imageUrl}
                 />
                 <div className="blog-sidebar__banner-overlay" />
                 <div className="blog-sidebar__banner-content">
-                  <span>AmarToy</span>
-                  <strong>Playful picks for bright little moments</strong>
+                  <span>{sidebarBanner.brandLabel}</span>
+                  <strong>{sidebarBanner.tagline}</strong>
                 </div>
               </Link>
             </div>

@@ -3,19 +3,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, Link2, Mail, MessageCircle, Quote, Search, Send } from "lucide-react";
 import { notFound } from "next/navigation";
-import { blogPosts, getBlogPostBySlug } from "@/data/site";
+import { findPostBySlug, getBlogPageContent, getPublishedPosts } from "@/lib/blogpage-management";
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return blogPosts.map((post) => ({ slug: post.slug }));
+  const content = await getBlogPageContent();
+  return getPublishedPosts(content).map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: BlogDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const content = await getBlogPageContent();
+  const post = findPostBySlug(content, slug);
 
   return {
     title: post ? `${post.title} | AmarToy` : "Blog | AmarToy",
@@ -25,12 +27,15 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const content = await getBlogPageContent();
+  const post = findPostBySlug(content, slug);
 
   if (!post) notFound();
 
-  const recentPosts = blogPosts.filter((item) => item.slug !== post.slug).slice(0, 2);
-  const relatedPosts = blogPosts.filter((item) => item.slug !== post.slug).slice(0, 2);
+  const published = getPublishedPosts(content);
+  const recentPosts = published.filter((item) => item.slug !== post.slug).slice(0, 2);
+  const relatedPosts = published.filter((item) => item.slug !== post.slug).slice(0, 2);
+  const { sidebarBanner } = content;
 
   return (
     <section className="blog-detail-page">
@@ -206,17 +211,17 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
               </div>
             </div>
 
-            <Link className="blog-sidebar__banner" href="/shop/">
+            <Link className="blog-sidebar__banner" href={sidebarBanner.href}>
               <Image
-                alt="Happy kids enjoying AmarToy collection"
+                alt={sidebarBanner.tagline}
                 fill
                 className="blog-sidebar__banner-image"
-                src="/images/real/happy-outdoors.jpg"
+                src={sidebarBanner.imageUrl}
               />
               <div className="blog-sidebar__banner-overlay" />
               <div className="blog-sidebar__banner-content">
-                <span>AmarToy</span>
-                <strong>Playful picks for bright little moments</strong>
+                <span>{sidebarBanner.brandLabel}</span>
+                <strong>{sidebarBanner.tagline}</strong>
               </div>
             </Link>
           </div>
