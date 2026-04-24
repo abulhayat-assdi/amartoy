@@ -92,11 +92,7 @@ export function FloatingWidgets() {
         <span className="floating-chat__label">{chatSettings.chatButtonLabel}</span>
       </button>
 
-      <div className="floating-rail">
-        <Link aria-label="Shop catalog" href="/shop/">
-          <Store size={18} />
-        </Link>
-      </div>
+
 
       {showTop ? (
         <button

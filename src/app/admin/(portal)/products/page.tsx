@@ -1,14 +1,13 @@
-import { AdminTablePageClient } from "@/components/admin/admin-table-page-client";
-import { adminPageContent, adminProducts } from "@/data/admin";
+import { ShopManagementClient } from "@/components/admin/shop-management-client";
+import { getShopPageContent } from "@/lib/shoppage-management";
 
-export default function AdminProductsPage() {
+export default async function AdminProductsPage() {
+  const content = await getShopPageContent();
+
   return (
-    <AdminTablePageClient
-      columnLabels={["Price", "Stock"]}
-      description={adminPageContent.products.description}
-      eyebrow={adminPageContent.products.eyebrow}
-      rows={adminProducts}
-      title={adminPageContent.products.title}
+    <ShopManagementClient
+      initialContent={content}
+      updatedAtLabel={content.updatedAt || "Draft not saved yet"}
     />
   );
 }

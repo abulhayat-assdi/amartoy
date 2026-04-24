@@ -5,16 +5,17 @@ import { Grid2x2, Menu, Search, ShoppingBag, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { BrandLogo } from "@/components/ui/brand-logo";
-import { navigation } from "@/data/site";
 import { useStore } from "@/components/providers/store-provider";
 import { usePathname } from "next/navigation";
+import type { GlobalSettings } from "@/types/globalsettings";
 
 interface HeaderProps {
+  globalSettings: GlobalSettings;
   onOpenSearch: () => void;
   onOpenPanel: () => void;
 }
 
-export function Header({ onOpenSearch, onOpenPanel }: HeaderProps) {
+export function Header({ globalSettings, onOpenSearch, onOpenPanel }: HeaderProps) {
   const pathname = usePathname();
   const { cartCount } = useStore();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,10 +43,10 @@ export function Header({ onOpenSearch, onOpenPanel }: HeaderProps) {
     <>
       <header className={clsx("site-header", isScrolled && "site-header--scrolled")}> 
         <div className="container header-inner">
-          <BrandLogo />
+          <BrandLogo logoUrl={globalSettings.logoUrl} brandName={globalSettings.brandName} tagline={globalSettings.brandTagline} />
 
           <nav className="main-nav" aria-label="Primary">
-            {navigation.map((item) => (
+            {globalSettings.headerNav.map((item) => (
               <div className="nav-item" key={item.label}>
                 <Link
                   className={clsx("nav-item__link", pathname === item.href && "nav-item__link--active")}
@@ -100,7 +101,7 @@ export function Header({ onOpenSearch, onOpenPanel }: HeaderProps) {
       <div className={clsx("mobile-drawer", mobileOpen && "mobile-drawer--open")}>
         <div className="mobile-drawer__panel">
           <div className="mobile-drawer__header">
-            <BrandLogo />
+            <BrandLogo logoUrl={globalSettings.logoUrl} brandName={globalSettings.brandName} tagline={globalSettings.brandTagline} />
             <button
               aria-label="Close menu"
               className="icon-btn icon-btn--mobile"
@@ -111,7 +112,7 @@ export function Header({ onOpenSearch, onOpenPanel }: HeaderProps) {
             </button>
           </div>
           <nav className="mobile-nav">
-            {navigation.map((item) => (
+            {globalSettings.headerNav.map((item) => (
               <div key={item.label}>
                 <Link className={pathname === item.href ? "active" : ""} href={item.href}>
                   {item.label}

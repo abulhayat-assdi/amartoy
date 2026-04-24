@@ -7,10 +7,17 @@ import { Header } from "@/components/layout/header";
 import { SearchOverlay } from "@/components/layout/search-overlay";
 import { SidePanel } from "@/components/layout/side-panel";
 import { FloatingWidgets } from "@/components/layout/floating-widgets";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { blogPosts, products } from "@/data/site";
 import type { ReactNode } from "react";
+import type { GlobalSettings } from "@/types/globalsettings";
 
-export function AppShell({ children }: { children: ReactNode }) {
+interface AppShellProps {
+  children: ReactNode;
+  globalSettings: GlobalSettings;
+}
+
+export function AppShell({ children, globalSettings }: AppShellProps) {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
@@ -22,7 +29,11 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <Header onOpenPanel={() => setPanelOpen(true)} onOpenSearch={() => setSearchOpen(true)} />
+      <Header 
+        globalSettings={globalSettings}
+        onOpenPanel={() => setPanelOpen(true)} 
+        onOpenSearch={() => setSearchOpen(true)} 
+      />
       <SearchOverlay
         onClose={() => setSearchOpen(false)}
         open={searchOpen}
@@ -31,8 +42,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       />
       <SidePanel onClose={() => setPanelOpen(false)} open={panelOpen} />
       <main>{children}</main>
-      <Footer />
+      <Footer globalSettings={globalSettings} />
       <FloatingWidgets />
+      <MobileBottomNav />
     </>
   );
 }

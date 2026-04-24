@@ -58,6 +58,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -66,6 +67,7 @@ body {
   background: var(--color-page-bg);
   font-family: var(--font-body);
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 a {
@@ -2407,19 +2409,21 @@ p {
   position: sticky;
   top: 1.5rem;
   width: 35.65rem;
+  max-width: 100%;
 }
 
 .product-gallery--marketplace .product-gallery__stage {
-  grid-template-columns: 4.75rem 30rem;
+  grid-template-columns: 4.75rem minmax(0, 1fr);
   gap: 0.9rem;
   align-items: start;
 }
 
 .product-gallery--marketplace .product-gallery__main {
   width: 30rem;
-  height: 30rem;
-  min-height: 0;
+  max-width: 100%;
+  height: auto;
   aspect-ratio: 1 / 1;
+  min-height: 0;
   border: 1px solid rgba(28, 28, 28, 0.06);
   border-radius: 1.5rem;
   background:
@@ -4165,11 +4169,14 @@ p {
   }
 
   .product-gallery--marketplace {
-    order: 2;
+    order: 1;
+    width: auto;
+    margin-inline: calc(var(--container-pad) * -1);
+    position: static;
   }
 
   .product-detail__content {
-    order: 1;
+    order: 2;
     gap: 0.8rem;
   }
 
@@ -4181,11 +4188,21 @@ p {
     grid-template-columns: 1fr;
   }
 
+  .product-gallery--marketplace .product-gallery__main {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    width: 100%;
+    height: auto;
+  }
+
   .product-gallery--marketplace .product-gallery__thumbs {
     order: 2;
     grid-template-columns: repeat(5, minmax(0, 3.1rem));
     grid-auto-rows: 3.1rem;
     justify-content: center;
+    padding-inline: var(--container-pad);
   }
 
   .product-gallery__mobileActions,
@@ -9040,11 +9057,15 @@ body {
   font-size: 1rem;
 }
 
+.shop-page__grid--showcase {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .shop-page__grid--showcase .product-card--shop {
   padding: 0.54rem 0.54rem 0.66rem;
 }
 
-.shop-page__grid--showcase .product-card--shop:nth-child(n + 4) {
+.shop-page__grid--showcase .product-card--shop:nth-child(n + 5) {
   display: none;
 }
 
@@ -9289,7 +9310,7 @@ body {
     gap: 1rem 0.8rem;
   }
 
-  .shop-page__grid--showcase .product-card--shop:nth-child(n + 4) {
+  .shop-page__grid--showcase .product-card--shop:nth-child(n + 5) {
     display: block;
   }
 
@@ -11081,6 +11102,7 @@ body {
 .homepage-admin__item-body {
   display: grid;
   gap: 0.45rem;
+  min-width: 0;
 }
 
 .homepage-admin__item-body strong {
@@ -11091,6 +11113,7 @@ body {
 .homepage-admin__item-body p {
   color: #606b8d;
   line-height: 1.65;
+  overflow-wrap: anywhere;
 }
 
 .homepage-admin__item-body span {
@@ -11270,4 +11293,482 @@ body {
   .homepage-admin__modal-actions {
     justify-content: start;
   }
+}
+
+/* ── Live Support Chat UI ── */
+.live-chat-section {
+  margin-top: 2.5rem;
+}
+
+.live-chat-container {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  border: 1px solid rgba(28, 39, 89, 0.08);
+  border-radius: 1rem;
+  overflow: hidden;
+  background: white;
+  min-height: 600px;
+  box-shadow: 0 14px 34px rgba(39, 54, 89, 0.06);
+}
+
+.live-chat-sidebar {
+  border-right: 1px solid rgba(28, 39, 89, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.live-chat-sidebar__header {
+  padding: 1.25rem;
+  border-bottom: 1px solid rgba(28, 39, 89, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.live-chat-sidebar__header h3 {
+  font-size: 1.1rem;
+  color: #11485e;
+  margin-bottom: 0.2rem;
+}
+
+.live-chat-sidebar__header p {
+  font-size: 0.8rem;
+  color: #617089;
+}
+
+.live-chat-badge {
+  background: #defce9;
+  color: #0d8355;
+  width: 1.8rem;
+  height: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.live-chat-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.live-chat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.25rem;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-bottom: 1px solid rgba(28, 39, 89, 0.04);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.live-chat-item:hover {
+  background: #f9fbff;
+}
+
+.live-chat-item.active {
+  background: #eaf6ef;
+}
+
+.live-chat-avatar {
+  width: 2.8rem;
+  height: 2.8rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #0f5c40;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.live-chat-avatar--sm {
+  width: 2.2rem;
+  height: 2.2rem;
+  font-size: 0.85rem;
+}
+
+.live-chat-item__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.live-chat-item__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.2rem;
+}
+
+.live-chat-item__top strong {
+  font-size: 0.9rem;
+  color: #11485e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-chat-time {
+  font-size: 0.75rem;
+  color: #8b99ae;
+  white-space: nowrap;
+}
+
+.live-chat-item__msg {
+  font-size: 0.85rem;
+  color: #617089;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-chat-main {
+  display: flex;
+  flex-direction: column;
+  background: #f4f7fb;
+}
+
+.live-chat-main__header {
+  padding: 1rem 1.25rem;
+  background: white;
+  border-bottom: 1px solid rgba(28, 39, 89, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.live-chat-main__user {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.live-chat-main__user strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #11485e;
+  margin-bottom: 0.1rem;
+}
+
+.live-chat-main__user p {
+  font-size: 0.75rem;
+  color: #0fa76f;
+  font-weight: 600;
+}
+
+.live-chat-delete-btn {
+  color: #ff4f81;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.live-chat-delete-btn:hover {
+  background: #ffe6eb;
+}
+
+.live-chat-messages {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.live-chat-msg-row {
+  display: flex;
+  width: 100%;
+}
+
+.live-chat-msg-row.user {
+  justify-content: flex-start;
+}
+
+.live-chat-msg-row.admin {
+  justify-content: flex-end;
+}
+
+.live-chat-bubble {
+  max-width: 70%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: white;
+  box-shadow: 0 2px 8px rgba(28, 39, 89, 0.04);
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.live-chat-msg-row.admin .live-chat-bubble {
+  background: #0fa76f;
+  color: white;
+}
+
+.live-chat-bubble span {
+  display: block;
+  font-size: 0.7rem;
+  color: #8b99ae;
+  margin-top: 0.4rem;
+  text-align: right;
+}
+
+.live-chat-msg-row.admin .live-chat-bubble span {
+  color: #a7d1c0;
+}
+
+.live-chat-composer {
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid rgba(28, 39, 89, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.live-chat-composer__inner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 1px solid #0fa76f;
+  border-radius: 999px;
+  padding: 0 1rem;
+  background: white;
+}
+
+.live-chat-composer__inner input {
+  flex: 1;
+  height: 3rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.95rem;
+}
+
+.live-chat-composer__attach {
+  background: transparent;
+  border: none;
+  color: #8b99ae;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.live-chat-composer__attach:hover {
+  color: #11485e;
+}
+
+.live-chat-composer__send {
+  background: #788596;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.live-chat-composer__send:hover {
+  background: #5f6c7e;
+}
+
+.live-chat-empty-sidebar {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #8b99ae;
+  font-size: 0.9rem;
+}
+
+.live-chat-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b99ae;
+  font-size: 1rem;
+}
+
+/* Delete Modal Styles */
+.live-chat-modal-panel {
+  text-align: center;
+  padding: 2.5rem 2rem !important;
+  max-width: 400px !important;
+  margin: 0 auto;
+}
+
+.live-chat-modal-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  background: #fef2f2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  color: #d97706;
+}
+
+.live-chat-modal-title {
+  color: #0f5c40;
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.live-chat-modal-desc {
+  color: #52637d;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.live-chat-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.live-chat-btn-cancel,
+.live-chat-btn-delete {
+  padding: 0.8rem 1.5rem;
+  border-radius: 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  min-width: 120px;
+}
+
+.live-chat-btn-cancel {
+  background: #f4f7fb;
+  color: #11485e;
+}
+
+.live-chat-btn-cancel:hover {
+  background: #e2e8f0;
+}
+
+.live-chat-btn-delete {
+  background: #e11d48;
+  color: white;
+}
+
+.live-chat-btn-delete:hover {
+  background: #be123c;
+}
+
+@media (max-width: 768px) {
+  .live-chat-container {
+    grid-template-columns: 1fr;
+  }
+  .live-chat-sidebar {
+    display: none;
+  }
+}
+
+/* Mobile Bottom Navigation */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: #ffffff;
+    box-shadow: 0 -4px 20px rgba(23, 33, 84, 0.08);
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.25rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(31, 45, 116, 0.08);
+  }
+
+  body {
+    padding-bottom: 5.5rem;
+  }
+
+  body:has(.product-detail-shell) .site-header,
+  body:has(.product-detail-shell) .page-hero {
+    display: none;
+  }
+
+  body:has(.product-detail-shell) .section {
+    padding-top: 0 !important;
+  }
+}
+
+.mobile-bottom-nav__item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  color: #7f88a4;
+  text-decoration: none;
+  font-size: 0.7rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  padding: 0.3rem 0;
+}
+
+.mobile-bottom-nav__item.active {
+  color: #1f2d74;
+}
+
+.mobile-bottom-nav__icon-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.mobile-bottom-nav__badge {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.4rem;
+  background: #ff156f;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  line-height: 1;
+  border: 1.5px solid white;
+}
+
+.mobile-bottom-nav__avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1f2d74 0%, #3448a3 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
 }

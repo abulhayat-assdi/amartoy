@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {
+  AppWindow,
   Bell,
   BookOpen,
   ClipboardList,
@@ -22,6 +23,7 @@ import type { ReactNode } from "react";
 
 const iconMap = {
   Dashboard: LayoutDashboard,
+  "Header & Footer": AppWindow,
   Home: ClipboardList,
   Products: Package2,
   Cart: ShoppingCart,

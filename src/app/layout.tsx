@@ -8,6 +8,7 @@ import { StoreProvider } from "@/components/providers/store-provider";
 import { SupportChatProvider } from "@/components/providers/support-chat-provider";
 import { AppShell } from "@/components/layout/app-shell";
 import { getContactPageContent } from "@/lib/contactpage-management";
+import { getGlobalSettings } from "@/lib/globalsettings-management";
 
 export const metadata: Metadata = {
   title: "AmarToy | Toys and Games",
@@ -17,13 +18,14 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const contactContent = await getContactPageContent();
+  const globalSettings = await getGlobalSettings();
 
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body>
         <StoreProvider>
           <SupportChatProvider settings={contactContent.chatSettings} channels={contactContent.channels}>
-            <AppShell>{children}</AppShell>
+            <AppShell globalSettings={globalSettings}>{children}</AppShell>
           </SupportChatProvider>
         </StoreProvider>
       </body>

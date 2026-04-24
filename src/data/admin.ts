@@ -28,11 +28,12 @@ export interface AdminTableRow {
 
 export const adminNavigation: AdminNavItem[] = [
   { label: "Dashboard", href: "/admin/dashboard/" },
+  { label: "Header & Footer", href: "/admin/header-footer/" },
   { label: "Home", href: "/admin/home/" },
+  { label: "About", href: "/admin/about/" },
   { label: "Products", href: "/admin/products/" },
   { label: "Cart", href: "/admin/cart/" },
   { label: "Blog", href: "/admin/blog/" },
-  { label: "About", href: "/admin/about/" },
   { label: "Contacts", href: "/admin/contacts/" },
   { label: "Settings", href: "/admin/settings/" },
 ];

@@ -23,6 +23,7 @@ import type { ChatSettings, ContactChannel, ContactChannelIcon, ContactPageConte
 interface ContactManagementClientProps {
   initialContent: ContactPageContent;
   updatedAtLabel: string;
+  children?: ReactNode;
 }
 
 type EditorState =
@@ -202,7 +203,7 @@ function Field({
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
-export function ContactManagementClient({ initialContent, updatedAtLabel }: ContactManagementClientProps) {
+export function ContactManagementClient({ initialContent, updatedAtLabel, children }: ContactManagementClientProps) {
   const [content, setContent] = useState(initialContent);
   const [editor, setEditor] = useState<EditorState | null>(null);
   const [status, setStatus] = useState("");
@@ -299,6 +300,8 @@ export function ContactManagementClient({ initialContent, updatedAtLabel }: Cont
           </button>
         </div>
       </section>
+
+      {children}
 
       {status ? <p className="homepage-admin__status">{status}</p> : null}
 
