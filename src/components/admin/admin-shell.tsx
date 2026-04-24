@@ -14,6 +14,9 @@ import {
   Package2,
   Settings2,
   ShoppingCart,
+  UserCircle,
+  Menu,
+  X,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -30,6 +33,7 @@ const iconMap = {
   Blog: FileText,
   About: BookOpen,
   Contacts: Mail,
+  "Login Management": UserCircle,
   Settings: Settings2,
 };
 
@@ -37,6 +41,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [timeLabel, setTimeLabel] = useState("");
   const [dateLabel, setDateLabel] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -68,14 +77,26 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="admin-shell">
-      <aside className="admin-sidebar">
+      {isMobileMenuOpen && (
+        <div className="admin-sidebar-overlay" onClick={() => setIsMobileMenuOpen(false)} />
+      )}
+      
+      <aside className={clsx("admin-sidebar", isMobileMenuOpen && "admin-sidebar--open")}>
         <div className="admin-sidebar__brand">
-          <div className="admin-badge-logo">
-            <span className="admin-badge-logo__mark">AT</span>
-            <div>
-              <strong>AmarToy</strong>
-              <p>Sales & Marketing</p>
+          <div className="admin-badge-logo" style={{ justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+              <span className="admin-badge-logo__mark">AT</span>
+              <div>
+                <strong>AmarToy</strong>
+                <p>Sales & Marketing</p>
+              </div>
             </div>
+            <button 
+              className="admin-mobile-close"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <X size={20} />
+            </button>
           </div>
         </div>
 
@@ -114,9 +135,17 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
       <div className="admin-content">
         <header className="admin-topbar">
-          <div className="admin-topbar__title-wrap">
-            <p className="admin-topbar__eyebrow">Internal Portal</p>
-            <h1 className="admin-topbar__title">AmarToy Admin</h1>
+          <div className="admin-topbar__title-wrap" style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <button 
+              className="admin-mobile-toggle"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
+            <div>
+              <p className="admin-topbar__eyebrow">Internal Portal</p>
+              <h1 className="admin-topbar__title">AmarToy Admin</h1>
+            </div>
           </div>
 
           <div className="admin-topbar__meta">

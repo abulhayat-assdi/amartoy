@@ -5,34 +5,51 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { loginStoredUser } from "@/lib/auth";
+import { createClient } from "@/utils/supabase/client";
+import type { LoginPageContent } from "@/types/loginpage";
 
-export function LoginPage() {
+interface LoginPageProps {
+  content: LoginPageContent;
+}
+
+export function LoginPage({ content }: LoginPageProps) {
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTarget = searchParams.get("redirect") || "/profile/";
+  const supabase = createClient();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!credential.trim() || !password) {
-      setError("Please enter your mobile/email and password.");
+      setError("Please enter your email and password.");
       return;
     }
 
-    const result = loginStoredUser(credential.trim(), password);
-    if (result.ok) {
+    setLoading(true);
+    setError("");
+
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: credential.trim(),
+        password,
+      });
+
+      if (signInError) {
+        setError(signInError.message);
+        setLoading(false);
+        return;
+      }
+
       router.push(redirectTarget);
-      return;
-    }
-
-    if ("message" in result) {
-      setError(result.message);
-      return;
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred.");
+      setLoading(false);
     }
   };
 
@@ -40,16 +57,17 @@ export function LoginPage() {
     <section className="auth-page">
       <div className="auth-card auth-card--login">
         <div className="auth-card__header auth-card__header--center">
-          <h1>Login</h1>
+          <h1>{content.title}</h1>
+          {content.subtitle ? <p>{content.subtitle}</p> : null}
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <label className="auth-field">
-            <span>Phone Number or Email</span>
+            <span>{content.emailLabel}</span>
             <div className="auth-input auth-input--icon">
               <input
                 className="auth-input__control"
-                placeholder="Enter mobile number or email"
+                placeholder={content.emailPlaceholder}
                 type="text"
                 value={credential}
                 onChange={(event) => setCredential(event.target.value)}
@@ -59,12 +77,12 @@ export function LoginPage() {
           </label>
 
           <label className="auth-field">
-            <span>Password</span>
+            <span>{content.passwordLabel}</span>
             <div className="auth-input auth-input--password">
               <LockKeyhole size={18} />
               <input
                 className="auth-input__control"
-                placeholder="Enter your password"
+                placeholder={content.passwordPlaceholder}
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
@@ -82,20 +100,20 @@ export function LoginPage() {
 
           <div className="auth-meta">
             <Link className="auth-link" href="/contact/">
-              Forgot Password?
+              {content.forgotPasswordText}
             </Link>
           </div>
 
           {error ? <p className="auth-error">{error}</p> : null}
 
-          <Button className="auth-submit auth-submit--login" type="submit">
-            Sign In
+          <Button className="auth-submit auth-submit--login" type="submit" disabled={loading}>
+            {loading ? "Signing In..." : content.submitButtonText}
             <ArrowRight size={18} />
           </Button>
         </form>
 
         <p className="auth-switch">
-          New here? <Link href="/register/">Create an Account</Link>
+          {content.registerPromptText} <Link href="/register/">{content.registerLinkText}</Link>
         </p>
       </div>
     </section>

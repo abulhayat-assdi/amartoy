@@ -35,6 +35,7 @@ export const adminNavigation: AdminNavItem[] = [
   { label: "Cart", href: "/admin/cart/" },
   { label: "Blog", href: "/admin/blog/" },
   { label: "Contacts", href: "/admin/contacts/" },
+  { label: "Login Management", href: "/admin/login-management/" },
   { label: "Settings", href: "/admin/settings/" },
 ];
 

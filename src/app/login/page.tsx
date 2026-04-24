@@ -1,5 +1,17 @@
-import { LoginPage } from "@/components/pages/login-page-client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { AuthPageClient } from "@/components/pages/auth-page-client";
+import { createClient } from "@/utils/supabase/server";
 
-export default function Login() {
-  return <LoginPage />;
+export const dynamic = "force-dynamic";
+
+export default async function Login() {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    redirect("/profile/");
+  }
+
+  return <AuthPageClient defaultIsLogin={true} />;
 }

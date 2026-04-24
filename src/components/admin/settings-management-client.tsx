@@ -449,7 +449,7 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
                   {editor.section === "contact" && "Edit Contact Details"}
                   {editor.section === "developer" && "Edit Developer Info"}
                   {editor.section === "footerDescription" && "Edit Footer Text"}
-                  {["headerNav", "quickLinks", "businessLinks"].includes(editor.section) && (editor.mode === "create" ? "Add Link" : "Edit Link")}
+                  {["headerNav", "quickLinks", "businessLinks"].includes(editor.section) && ("mode" in editor && editor.mode === "create" ? "Add Link" : "Edit Link")}
                   {editor.section === "socialLinks" && (editor.mode === "create" ? "Add Social Link" : "Edit Social Link")}
                 </h3>
               </div>
@@ -533,14 +533,14 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
                     <input
                       className="admin-input"
                       value={(editor.draft as NavLink).label}
-                      onChange={(e) => setEditor({ ...editor, draft: { ...(editor.draft as NavLink), label: e.target.value } })}
+                      onChange={(e) => setEditor({ ...editor, draft: { ...(editor.draft as NavLink), label: e.target.value } } as any)}
                     />
                   </Field>
                   <Field label="URL (Href)" full>
                     <input
                       className="admin-input"
                       value={(editor.draft as NavLink).href}
-                      onChange={(e) => setEditor({ ...editor, draft: { ...(editor.draft as NavLink), href: e.target.value } })}
+                      onChange={(e) => setEditor({ ...editor, draft: { ...(editor.draft as NavLink), href: e.target.value } } as any)}
                     />
                   </Field>
                 </>

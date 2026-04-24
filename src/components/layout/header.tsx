@@ -8,6 +8,7 @@ import { BrandLogo } from "@/components/ui/brand-logo";
 import { useStore } from "@/components/providers/store-provider";
 import { usePathname } from "next/navigation";
 import type { GlobalSettings } from "@/types/globalsettings";
+import { createClient } from "@/utils/supabase/client";
 
 interface HeaderProps {
   globalSettings: GlobalSettings;
@@ -32,12 +33,49 @@ export function Header({ globalSettings, onOpenSearch, onOpenPanel }: HeaderProp
     setMobileOpen(false);
   }, [pathname]);
 
-  // Dummy auth state: replace with real auth logic
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userProfile, setUserProfile] = useState<{ name: string; initial: string; avatarUrl: string } | null>(null);
+
   useEffect(() => {
-    // TODO: Replace with real auth check
-    setIsLoggedIn(typeof window !== "undefined" && window.localStorage.getItem("amartoy-demo-user") === "1");
-  }, [pathname]);
+    const supabase = createClient();
+    
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setIsLoggedIn(true);
+        const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email || "User";
+        setUserProfile({
+          name: name,
+          initial: name.charAt(0).toUpperCase(),
+          avatarUrl: user.user_metadata?.avatar_url || ""
+        });
+      } else {
+        setIsLoggedIn(false);
+        setUserProfile(null);
+      }
+    };
+    fetchUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setIsLoggedIn(true);
+        const user = session.user;
+        const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email || "User";
+        setUserProfile({
+          name: name,
+          initial: name.charAt(0).toUpperCase(),
+          avatarUrl: user.user_metadata?.avatar_url || ""
+        });
+      } else {
+        setIsLoggedIn(false);
+        setUserProfile(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <>
@@ -73,7 +111,17 @@ export function Header({ globalSettings, onOpenSearch, onOpenPanel }: HeaderProp
               className="header-signin"
               href={isLoggedIn ? "/profile/" : "/login/"}
             >
-              <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
+              {isLoggedIn && userProfile ? (
+                userProfile.avatarUrl ? (
+                  <img src={userProfile.avatarUrl} alt="Profile" className="header-avatar" style={{ width: 26, height: 26, borderRadius: '50%', objectFit: 'cover' }} />
+                ) : (
+                  <div className="header-avatar-initial" style={{ width: 26, height: 26, borderRadius: '50%', backgroundColor: 'var(--color-primary, #000)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '14px' }}>
+                    {userProfile.initial}
+                  </div>
+                )
+              ) : (
+                <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M16 20v-2a4 4 0 0 0-8 0v2"/></svg>
+              )}
               <span>{isLoggedIn ? "Hello, My Profile" : "Hello, Sign in"}</span>
             </Link>
             <Link aria-label="View cart" className="icon-btn icon-btn--cart" href="/cart/">

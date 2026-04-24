@@ -5945,6 +5945,8 @@ select.checkout-field {
 .admin-content {
   display: grid;
   grid-template-rows: auto 1fr;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .admin-topbar {
@@ -5956,6 +5958,9 @@ select.checkout-field {
   border-bottom: 1px solid rgba(26, 26, 46, 0.08);
   background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(14px);
+  position: sticky;
+  top: 0;
+  z-index: 40;
 }
 
 .admin-topbar__title,
@@ -6234,19 +6239,81 @@ select.checkout-field {
 
 /* Admin Portal Refresh */
 .admin-shell {
+  height: 100vh;
+  overflow: hidden;
   grid-template-columns: 220px minmax(0, 1fr);
   background: #eef3f8;
+  position: relative;
 }
 
 .admin-sidebar {
-  position: sticky;
-  top: 0;
   height: 100vh;
+  overflow-y: auto;
   gap: 1.2rem;
   padding: 1.25rem 0.75rem 0.9rem;
   border-right: 1px solid rgba(28, 28, 28, 0.08);
   background: linear-gradient(180deg, #fffdfa 0%, #fff6ef 100%);
   color: var(--color-dark-bg);
+  transition: transform 0.3s ease;
+}
+
+.admin-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--color-dark-bg);
+  cursor: pointer;
+  padding: 0;
+}
+
+.admin-mobile-close {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--color-dark-bg);
+  cursor: pointer;
+}
+
+.admin-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 45;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 1080px) {
+  .admin-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    z-index: 50;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+  }
+
+  .admin-sidebar--open {
+    transform: translateX(0);
+  }
+
+  .admin-sidebar-overlay {
+    display: block;
+  }
+
+  .admin-mobile-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  .admin-mobile-close {
+    display: block;
+  }
 }
 
 .admin-badge-logo {
@@ -6789,15 +6856,6 @@ select.checkout-field {
 }
 
 @media (max-width: 1080px) {
-  .admin-shell {
-    grid-template-columns: 1fr;
-  }
-
-  .admin-sidebar {
-    position: static;
-    height: auto;
-  }
-
   .admin-board__heading,
   .admin-board__grid,
   .admin-page__header,
