@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { HomepageManagementClient } from "@/components/admin/homepage-management-client";
 import { getHomePageContent } from "@/lib/homepage-management";
 

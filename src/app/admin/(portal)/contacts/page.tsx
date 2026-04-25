@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { ContactManagementClient } from "@/components/admin/contact-management-client";
 import { LiveSupportChat } from "@/components/admin/live-support-chat";
 import { getContactPageContent } from "@/lib/contactpage-management";

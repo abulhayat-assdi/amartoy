@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { BlogManagementClient } from "@/components/admin/blog-management-client";
 import { getBlogPageContent } from "@/lib/blogpage-management";
 

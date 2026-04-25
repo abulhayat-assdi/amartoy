@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { LoginManagementClient } from "@/components/admin/login-management-client";
 import { getLoginPageContent } from "@/lib/loginpage-management";
 import { getProfilePageContent } from "@/lib/profilepage-management";

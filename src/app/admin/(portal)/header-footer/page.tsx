@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { SettingsManagementClient } from "@/components/admin/settings-management-client";
 import { getGlobalSettings } from "@/lib/globalsettings-management";
 

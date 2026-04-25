@@ -1,6 +1,5 @@
 import Link from "next/link";
 import clsx from "clsx";
-import Image from "next/image";
 
 interface BrandLogoProps {
   light?: boolean;
@@ -13,7 +12,8 @@ export function BrandLogo({ light = false, logoUrl, brandName = "AmarToy", tagli
   return (
     <Link className="brand-logo" href="/" aria-label={`${brandName} home`}>
       {logoUrl ? (
-        <Image src={logoUrl} alt={brandName} width={150} height={40} style={{ objectFit: "contain", height: "auto" }} priority />
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={logoUrl} alt={brandName} style={{ height: "48px", width: "auto", maxHeight: "48px", objectFit: "contain", display: "block" }} />
       ) : (
         <>
           <span className={clsx("brand-logo__word", light && "brand-logo__word--light")}>

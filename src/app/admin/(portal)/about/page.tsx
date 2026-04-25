@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { AboutManagementClient } from "@/components/admin/about-management-client";
 import { getAboutPageContent } from "@/lib/aboutpage-management";
 

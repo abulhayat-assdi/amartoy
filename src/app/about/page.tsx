@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { TestimonialsSection } from "@/components/sections/testimonials-section";
 import { getAboutPageContent } from "@/lib/aboutpage-management";
 import Image from "next/image";

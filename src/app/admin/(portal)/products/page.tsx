@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { ShopManagementClient } from "@/components/admin/shop-management-client";
 import { getShopPageContent } from "@/lib/shoppage-management";
 

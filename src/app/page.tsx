@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BadgeDollarSign, CircleHelp, PackageCheck, ShieldCheck } from "lucide-react";
@@ -39,7 +41,7 @@ export default async function HomePage() {
           <div className="home-categories-grid">
             {homepageContent.categories.map((category) => (
               <Link className="home-category-card" href={category.href} key={category.id}>
-                <Image alt={category.name} fill className="home-category-card__image" src={category.imageUrl} />
+                <Image alt={category.name} fill priority className="home-category-card__image" src={category.imageUrl} />
                 <div className="home-category-card__overlay" />
                 <div className="home-category-card__content">
                   <h3>{category.name}</h3>

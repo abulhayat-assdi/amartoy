@@ -16,7 +16,7 @@ import {
 } from "@/lib/auth";
 
 type DeliveryAreaType = "union" | "city";
-type PaymentMethod = "ssl-bkash" | "ssl-nagad" | "ssl-rocket" | "ssl-card" | "cod";
+type PaymentMethod = "ssl-online" | "cod";
 
 interface CheckoutFormState {
   fullName: string;
@@ -43,24 +43,9 @@ const couponRules: Record<string, { discountType: "percent" | "flat"; amount: nu
 
 const paymentOptions = [
   {
-    value: "ssl-bkash" as const,
-    title: "bKash via SSLCommerz",
-    subtitle: "Pay instantly with your bKash wallet.",
-  },
-  {
-    value: "ssl-nagad" as const,
-    title: "Nagad via SSLCommerz",
-    subtitle: "Use Nagad securely through the payment gateway.",
-  },
-  {
-    value: "ssl-rocket" as const,
-    title: "Rocket via SSLCommerz",
-    subtitle: "Complete payment with DBBL Rocket.",
-  },
-  {
-    value: "ssl-card" as const,
-    title: "Card / SSLCommerz",
-    subtitle: "Visa, Mastercard, Amex and more.",
+    value: "ssl-online" as const,
+    title: "Pay Online",
+    subtitle: "Pay securely via SSLCommerz with any medium.",
   },
   {
     value: "cod" as const,
@@ -92,7 +77,7 @@ export function CheckoutPageClient() {
     cityAddress: "",
     couponCode: "",
     orderNote: "",
-    paymentMethod: "ssl-bkash",
+    paymentMethod: "ssl-online",
   });
   const [errors, setErrors] = useState<CheckoutErrors>({});
   const [couponStatus, setCouponStatus] = useState("");

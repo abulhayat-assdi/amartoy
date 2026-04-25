@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getAdminConfig } from "@/lib/admin-management";
 import { AdminManagementClient } from "@/components/admin/admin-management-client";
 
