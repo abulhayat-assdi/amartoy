@@ -431,7 +431,7 @@ export function HomepageManagementClient({
         <SectionBlock
           icon={<LayoutTemplate size={18} />}
           title="Hero Banner"
-          description="Banner slides add, edit, delete আর CTA control."
+          description="Add, edit, delete banner slides and control CTAs."
           badge={`${content.heroSlides.length} slides`}
           action={
             <button className="admin-btn admin-btn--soft" type="button" onClick={() => openEditor({ section: "hero", mode: "create", index: null, draft: createHeroSlide() })}>
@@ -509,7 +509,7 @@ export function HomepageManagementClient({
         <SectionBlock
           icon={<PackagePlus size={18} />}
           title="Popular Products"
-          description="কোন product card homepage-এ দেখাবে সেটা link/slug দিয়ে control."
+          description="Control which product cards show on the homepage via link/slug."
           badge={`${content.popularProductsSection.productLinks.length} products`}
           action={
             <button className="admin-btn admin-btn--soft" type="button" onClick={() => openEditor({ section: "popular", mode: "edit", draft: content.popularProductsSection })}>

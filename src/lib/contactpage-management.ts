@@ -81,7 +81,7 @@ const DEFAULT_CHAT_SETTINGS: ChatSettings = {
   avatarLetter: "A",
   brandName: "AmarToy",
   supportStatusText: "Live Support",
-  welcomeMessage: "আসসালামু আলাইকুম, AmarToy-এ আপনাকে স্বাগতম। আমরা কিভাবে সহযোগিতা করতে পারি?",
+  welcomeMessage: "Assalamu Alaikum, welcome to AmarToy. How can we help you?",
   composerPlaceholder: "Compose your message...",
   statusBarText: "Bangla + English supported",
   chatButtonLabel: "Please Chat",

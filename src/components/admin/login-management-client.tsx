@@ -57,7 +57,7 @@ export function LoginManagementClient({ loginContent, profileContent }: LoginMan
               <span className="homepage-admin__section-icon"><LogIn size={18} /></span>
               <div>
                 <h3>Sign In Page Config</h3>
-                <p>কাস্টমার লগিন পেইজের টেক্সট এবং লজিক্যাল লেবেল ম্যানেজ করুন</p>
+                <p>Manage customer login page text and logical labels</p>
               </div>
             </div>
           </div>
@@ -160,7 +160,7 @@ export function LoginManagementClient({ loginContent, profileContent }: LoginMan
               <span className="homepage-admin__section-icon"><UserCircle size={18} /></span>
               <div>
                 <h3>Customer Dashboard Config</h3>
-                <p>লগিন করার পর ইউজার প্রোফাইল বা ড্যাশবোর্ড পেইজে কি কি লেখা দেখবে</p>
+                <p>What text the user will see on the profile or dashboard page after logging in</p>
               </div>
             </div>
           </div>

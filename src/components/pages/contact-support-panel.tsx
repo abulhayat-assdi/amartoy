@@ -109,7 +109,7 @@ export function ContactSupportPanel({
     const nextSize = mergedFiles.reduce((sum, file) => sum + file.size, 0);
 
     if (nextSize > maxAttachmentBytes) {
-      setError(`সব মিলিয়ে ${maxAttachmentLabel} এর মধ্যে ফাইল পাঠানো যাবে।`);
+      setError(`Total file size cannot exceed ${maxAttachmentLabel}.`);
       event.target.value = "";
       return;
     }
@@ -168,7 +168,7 @@ export function ContactSupportPanel({
     }
 
     if (!recorderSupported) {
-      setError("এই ব্রাউজারে voice recording support করছে না।");
+      setError("Voice recording is not supported in this browser.");
       return;
     }
 
@@ -197,7 +197,7 @@ export function ContactSupportPanel({
           const nextSize = mergedFiles.reduce((sum, entry) => sum + entry.size, 0);
 
           if (nextSize > maxAttachmentBytes) {
-            setError(`সব মিলিয়ে ${maxAttachmentLabel} এর মধ্যে ফাইল পাঠানো যাবে।`);
+            setError(`Total file size cannot exceed ${maxAttachmentLabel}.`);
             return current;
           }
 
@@ -212,7 +212,7 @@ export function ContactSupportPanel({
       setRecording(true);
       setError("");
     } catch {
-      setError("মাইক্রোফোন access পাওয়া যায়নি।");
+      setError("Microphone access denied.");
     }
   };
 

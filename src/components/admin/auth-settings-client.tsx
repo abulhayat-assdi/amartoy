@@ -53,7 +53,7 @@ export function AuthSettingsClient({ loginContent }: AuthSettingsClientProps) {
               <span className="homepage-admin__section-icon"><LogIn size={18} /></span>
               <div>
                 <h3>Sign In Page Config</h3>
-                <p>কাস্টমার লগিন পেইজের টেক্সট এবং লজিক্যাল লেবেল ম্যানেজ করুন</p>
+                <p>Manage customer login page text and logical labels</p>
               </div>
             </div>
           </div>

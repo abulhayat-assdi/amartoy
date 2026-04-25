@@ -106,6 +106,7 @@ export function Header({ globalSettings, onOpenSearch, onOpenPanel }: HeaderProp
           </nav>
 
           <div className="header-actions">
+            {/* Profile section hidden for now
             <Link
               aria-label={isLoggedIn ? "Profile" : "Login"}
               className="header-signin"
@@ -124,6 +125,7 @@ export function Header({ globalSettings, onOpenSearch, onOpenPanel }: HeaderProp
               )}
               <span>{isLoggedIn ? "Hello, My Profile" : "Hello, Sign in"}</span>
             </Link>
+            */}
             <Link aria-label="View cart" className="icon-btn icon-btn--cart" href="/cart/">
               <ShoppingBag size={22} />
               {cartCount ? <span className="cart-count-badge">{cartCount}</span> : null}

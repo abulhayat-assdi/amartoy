@@ -1,7 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { useActionState } from "react";
 import { LockKeyhole, ShieldCheck } from "lucide-react";
+import { adminLoginAction } from "./actions";
 
 export default function AdminLoginPage() {
+  const [state, formAction, isPending] = useActionState(adminLoginAction, null);
+
   return (
     <section className="admin-login">
       <div className="admin-login__panel">
@@ -14,19 +20,20 @@ export default function AdminLoginPage() {
           </p>
         </div>
 
-        <form className="admin-login__form">
+        <form className="admin-login__form" action={formAction}>
+          {state?.error && <p style={{ color: "red", fontSize: "0.875rem" }}>{state.error}</p>}
           <label>
             <span>Email</span>
-            <input className="admin-input" defaultValue="admin@amartoy.com" type="email" />
+            <input className="admin-input" name="email" defaultValue="admin@amartoy.com" type="email" required />
           </label>
           <label>
             <span>Password</span>
-            <input className="admin-input" defaultValue="demo-password" type="password" />
+            <input className="admin-input" name="password" defaultValue="demo-password" type="password" required />
           </label>
-          <Link className="admin-btn admin-btn--full" href="/admin/dashboard/">
+          <button className="admin-btn admin-btn--full" type="submit" disabled={isPending}>
             <LockKeyhole size={18} />
-            Open Admin Portal
-          </Link>
+            {isPending ? "Signing in..." : "Open Admin Portal"}
+          </button>
         </form>
 
         <div className="admin-login__meta">

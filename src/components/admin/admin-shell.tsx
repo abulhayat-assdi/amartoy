@@ -17,12 +17,15 @@ import {
   UserCircle,
   Menu,
   X,
+  ShieldCheck,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { adminNavigation } from "@/data/admin";
 import type { ReactNode } from "react";
+import type { AdminProfile } from "@/types/admin-management";
+import { adminLogoutAction } from "@/app/admin/(auth)/login/actions";
 
 const iconMap = {
   Dashboard: LayoutDashboard,
@@ -35,9 +38,10 @@ const iconMap = {
   Contacts: Mail,
   "Login Management": UserCircle,
   Settings: Settings2,
+  "Admin Management": ShieldCheck,
 };
 
-export function AdminShell({ children }: { children: ReactNode }) {
+export function AdminShell({ children, profile }: { children: ReactNode; profile?: AdminProfile }) {
   const pathname = usePathname();
   const [timeLabel, setTimeLabel] = useState("");
   const [dateLabel, setDateLabel] = useState("");
@@ -102,6 +106,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
         <nav className="admin-nav" aria-label="Admin navigation">
           {adminNavigation.map((item) => {
+            if (profile?.role !== "super-admin") {
+              const perm = profile?.permissions?.find(p => p.pageId === item.label);
+              if (!perm?.canRead) return null;
+            }
+
             const Icon = iconMap[item.label as keyof typeof iconMap] ?? ClipboardList;
 
             return (
@@ -118,18 +127,12 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="admin-sidebar__footer">
-          <div className="admin-user-card">
-            <span className="admin-user-card__avatar">A</span>
-            <div>
-              <strong>Abul Hayat</strong>
-              <p>Admin</p>
-            </div>
-          </div>
-
-          <Link className="admin-logout-btn" href="/admin/login/">
-            <LogOut size={16} />
-            Logout
-          </Link>
+          <form action={adminLogoutAction}>
+            <button className="admin-logout-btn" type="submit" style={{ width: "100%", background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem", color: "inherit", font: "inherit", textAlign: "left" }}>
+              <LogOut size={16} />
+              Logout
+            </button>
+          </form>
         </div>
       </aside>
 
@@ -162,10 +165,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
             <div className="admin-profile-chip">
               <div>
-                <strong>Abul Hayat</strong>
-                <p>Admin</p>
+                <strong>{profile?.name || "Admin"}</strong>
+                <p>{profile?.role === "super-admin" ? "Super Admin" : "Admin"}</p>
               </div>
-              <span className="admin-profile-chip__avatar">AH</span>
+              <span className="admin-profile-chip__avatar">{profile?.name?.charAt(0).toUpperCase() || "A"}</span>
             </div>
           </div>
         </header>

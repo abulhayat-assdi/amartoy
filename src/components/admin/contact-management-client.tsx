@@ -310,7 +310,7 @@ export function ContactManagementClient({ initialContent, updatedAtLabel, childr
         <SectionBlock
           icon={<MessageCircle size={18} />}
           title="Contact Channels"
-          description='Contact পেইজের "Message us directly" section — WhatsApp, Messenger, Email, Call ইত্যাদি।'
+          description='Contact page "Message us directly" section — WhatsApp, Messenger, Email, Call, etc.'
           badge={`${enabledCount} enabled / ${content.channels.length} total`}
           action={
             <button
@@ -347,7 +347,7 @@ export function ContactManagementClient({ initialContent, updatedAtLabel, childr
         <SectionBlock
           icon={<Settings size={18} />}
           title="Please Chat Settings"
-          description={`Floating chat button, welcome message, avatar, composer placeholder সব এখানে।`}
+          description={`Floating chat button, welcome message, avatar, and composer placeholder settings.`}
           badge="Single block"
           action={
             <button
@@ -442,7 +442,7 @@ export function ContactManagementClient({ initialContent, updatedAtLabel, childr
               {/* ── Chat Settings Editor ── */}
               {editor.section === "chat" ? (
                 <>
-                  <Field label="Chat Button Label" hint="Floating button এ দেখায়">
+                  <Field label="Chat Button Label" hint="Shows on the floating button">
                     <input
                       className="admin-input"
                       value={editor.draft.chatButtonLabel}
@@ -451,7 +451,7 @@ export function ContactManagementClient({ initialContent, updatedAtLabel, childr
                       }
                     />
                   </Field>
-                  <Field label="Avatar Letter" hint="Chat header circle এ দেখায়">
+                  <Field label="Avatar Letter" hint="Shows in the chat header circle">
                     <input
                       className="admin-input"
                       value={editor.draft.avatarLetter}
@@ -494,7 +494,7 @@ export function ContactManagementClient({ initialContent, updatedAtLabel, childr
                       }
                     />
                   </Field>
-                  <Field label="Status Bar Text" hint="Composer নিচে দেখায়">
+                  <Field label="Status Bar Text" hint="Shows below the composer">
                     <input
                       className="admin-input"
                       value={editor.draft.statusBarText}
@@ -512,7 +512,7 @@ export function ContactManagementClient({ initialContent, updatedAtLabel, childr
                       }
                     />
                   </Field>
-                  <Field label="Welcome Message" full hint="Chat open হলে প্রথম message হিসেবে দেখায়">
+                  <Field label="Welcome Message" full hint="Shows as the first message when chat opens">
                     <textarea
                       className="admin-input homepage-admin__textarea"
                       value={editor.draft.welcomeMessage}

@@ -37,6 +37,7 @@ export const adminNavigation: AdminNavItem[] = [
   { label: "Contacts", href: "/admin/contacts/" },
   { label: "Login Management", href: "/admin/login-management/" },
   { label: "Settings", href: "/admin/settings/" },
+  { label: "Admin Management", href: "/admin/admin-management/" },
 ];
 
 export const adminMetrics: AdminMetric[] = [
@@ -207,5 +208,10 @@ export const adminPageContent = {
     eyebrow: "Configuration",
     title: "Store Settings",
     description: "Manage store details, notifications, payments, and admin-side preferences.",
+  },
+  "admin-management": {
+    eyebrow: "Security",
+    title: "Admin & Profile Management",
+    description: "Manage admin users, their roles, and access permissions for the internal portal.",
   },
 };

@@ -276,7 +276,7 @@ export function AboutManagementClient({
         <SectionBlock
           icon={<FileText size={18} />}
           title="Hero / Brand Story"
-          description="About পেইজের মূল সেকশন — eyebrow, title, তিনটি paragraph, signature, image এবং badge।"
+          description="Main section of the About page — eyebrow, title, three paragraphs, signature, image, and badge."
           badge="Single block"
           action={
             <button
@@ -303,7 +303,7 @@ export function AboutManagementClient({
         <SectionBlock
           icon={<ListOrdered size={18} />}
           title="Highlights Grid"
-          description="Numbered highlight cards — add, edit, delete করুন।"
+          description="Numbered highlight cards — add, edit, and delete."
           badge={`${content.highlights.length} items`}
           action={
             <button

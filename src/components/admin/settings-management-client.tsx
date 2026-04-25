@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import type { ReactNode } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import {
   Briefcase,
   Building2,
@@ -15,9 +15,10 @@ import {
   Save,
   Share2,
   Trash2,
+  Upload,
   X,
 } from "lucide-react";
-import { saveGlobalSettingsAction } from "@/app/admin/(portal)/settings/actions";
+import { saveGlobalSettingsAction, uploadSettingsAssetAction } from "@/app/admin/(portal)/settings/actions";
 import type { GlobalSettings, NavLink, SocialLink } from "@/types/globalsettings";
 
 interface SettingsManagementClientProps {
@@ -141,6 +142,7 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
   const [content, setContent] = useState<GlobalSettings>(initialContent);
   const [editor, setEditor] = useState<EditorState | null>(null);
   const [status, setStatus] = useState("");
+  const [uploadingTarget, setUploadingTarget] = useState("");
   const [isSaving, startSaving] = useTransition();
 
   const serializedContent = useMemo(() => JSON.stringify(content), [content]);
@@ -169,6 +171,33 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
         setContent((current) => ({ ...current, updatedAt: result.updatedAt }));
       }
     });
+  };
+
+  const handleUpload = async (event: ChangeEvent<HTMLInputElement>, folder: string, target: string) => {
+    const file = event.target.files?.[0];
+    if (!file || !editor) return;
+
+    setUploadingTarget(target);
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", folder);
+
+    const result = await uploadSettingsAssetAction(formData);
+    setStatus(result.message);
+
+    if (result.ok && result.url) {
+      setEditor((current) => {
+        if (!current) return current;
+        if (current.section === "brand" && target === "brand-logo") {
+          return { ...current, draft: { ...current.draft, logoUrl: result.url } };
+        }
+        return current;
+      });
+    }
+
+    setUploadingTarget("");
+    event.target.value = "";
   };
 
   const submitEditor = () => {
@@ -245,7 +274,7 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
         <SectionBlock
           icon={<ImageIcon size={18} />}
           title="Brand Settings"
-          description="ওয়েবসাইটের লোগো, নাম এবং ট্যাগলাইন"
+          description="Website logo, name, and tagline"
           badge="Global"
           action={
             <button
@@ -271,7 +300,7 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
         <SectionBlock
           icon={<PhoneCall size={18} />}
           title="Contact Details"
-          description="ফোন নাম্বার, ইমেইল এবং ঠিকানা (Headquarters)"
+          description="Phone number, email, and address (Headquarters)"
           badge="Footer / Global"
           action={
             <button
@@ -297,7 +326,7 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
         <SectionBlock
           icon={<Menu size={18} />}
           title="Header Navigation"
-          description="হেডারের মেইন মেনু লিংক্স"
+          description="Header main menu links"
           badge={`${content.headerNav.length} links`}
           action={
             <button
@@ -327,7 +356,7 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
         <SectionBlock
           icon={<Building2 size={18} />}
           title="Footer Text"
-          description="লোগোর নিচের ডেসক্রিপশন টেক্সট"
+          description="Description text below the logo"
           badge="1 block"
           action={
             <button
@@ -352,7 +381,7 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
         <SectionBlock
           icon={<LinkIcon size={18} />}
           title="Quick Links (Footer)"
-          description="ফুটারের Quick Links কলাম"
+          description="Footer Quick Links column"
           badge={`${content.quickLinks.length} links`}
           action={
             <button
@@ -381,7 +410,7 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
         <SectionBlock
           icon={<Briefcase size={18} />}
           title="About Business (Footer)"
-          description="ফুটারের About Business কলাম"
+          description="Footer About Business column"
           badge={`${content.businessLinks.length} links`}
           action={
             <button
@@ -410,7 +439,7 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
         <SectionBlock
           icon={<Share2 size={18} />}
           title="Social Media Links"
-          description="ফুটারের সোশ্যাল মিডিয়া আইকনগুলো"
+          description="Footer social media icons"
           badge={`${content.socialLinks.length} links`}
           action={
             <button
@@ -477,12 +506,19 @@ export function SettingsManagementClient({ initialContent, updatedAtLabel }: Set
                     />
                   </Field>
                   <Field label="Logo URL" full hint="Leave blank to use text logo">
-                    <input
-                      className="admin-input"
-                      value={editor.draft.logoUrl || ""}
-                      placeholder="/images/logo.svg"
-                      onChange={(e) => setEditor({ ...editor, draft: { ...editor.draft, logoUrl: e.target.value } })}
-                    />
+                    <div className="homepage-admin__asset-row">
+                      <input
+                        className="admin-input"
+                        value={editor.draft.logoUrl || ""}
+                        placeholder="/images/logo.svg"
+                        onChange={(e) => setEditor({ ...editor, draft: { ...editor.draft, logoUrl: e.target.value } })}
+                      />
+                      <label className="admin-btn admin-btn--soft homepage-admin__upload-btn">
+                        <Upload size={16} />
+                        {uploadingTarget === "brand-logo" ? "Uploading..." : "Upload"}
+                        <input hidden type="file" accept="image/*" onChange={(event) => handleUpload(event, "settings/brand", "brand-logo")} />
+                      </label>
+                    </div>
                   </Field>
                 </>
               )}

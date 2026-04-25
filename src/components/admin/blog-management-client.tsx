@@ -362,7 +362,7 @@ export function BlogManagementClient({ initialContent, updatedAtLabel }: BlogMan
         <SectionBlock
           icon={<LayoutTemplate size={18} />}
           title="Page Header"
-          description="Blog পেইজের eyebrow, title এবং description।"
+          description="Blog page eyebrow, title, and description."
           badge="Single block"
           action={
             <button
@@ -389,7 +389,7 @@ export function BlogManagementClient({ initialContent, updatedAtLabel }: BlogMan
         <SectionBlock
           icon={<FileText size={18} />}
           title="Blog Posts"
-          description={`সব blog post add, edit, delete এবং publish/unpublish করুন।`}
+          description={`Add, edit, delete, and publish/unpublish all blog posts.`}
           badge={`${publishedCount} published / ${content.posts.length} total`}
           action={
             <button
@@ -422,7 +422,7 @@ export function BlogManagementClient({ initialContent, updatedAtLabel }: BlogMan
         <SectionBlock
           icon={<ImagePlus size={18} />}
           title="Sidebar Banner"
-          description="Blog sidebar-এর promotional banner block।"
+          description="Promotional banner block for the blog sidebar."
           badge="Single block"
           action={
             <button

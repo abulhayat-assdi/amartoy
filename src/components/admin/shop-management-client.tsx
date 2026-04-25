@@ -287,7 +287,7 @@ function ProductsSection({
               <h3>Products</h3>
               <span className="homepage-admin__count">{enabledCount} enabled / {products.length} total</span>
             </div>
-            <p>ক্যাটাগরি অনুযায়ী প্রোডাক্ট গুলো ম্যানেজ করুন — Add, Edit, Delete করতে পারবেন।</p>
+            <p>Manage products by category — Add, Edit, Delete.</p>
           </div>
         </div>
         <button className="admin-btn admin-btn--soft" type="button" onClick={onAdd}>
@@ -549,7 +549,7 @@ export function ShopManagementClient({ initialContent, updatedAtLabel }: ShopMan
         <SectionBlock
           icon={<Settings size={18} />}
           title="Shop Settings"
-          description="শপ পেইজের টাইটেল, শিপিং চার্জ, আইটেমস পার পেইজ ইত্যাদি।"
+          description="Shop page title, shipping charges, items per page, etc."
           badge="Single block"
           action={
             <button
@@ -576,7 +576,7 @@ export function ShopManagementClient({ initialContent, updatedAtLabel }: ShopMan
         <SectionBlock
           icon={<Layers size={18} />}
           title="Categories"
-          description="প্রোডাক্ট ক্যাটাগরি গুলো ম্যানেজ করুন — নাম, স্লাগ, বর্ণনা।"
+          description="Manage product categories — name, slug, description."
           badge={`${enabledCategoryCount} enabled / ${content.categories.length} total`}
           action={
             <button

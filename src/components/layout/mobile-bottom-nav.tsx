@@ -22,12 +22,14 @@ export function MobileBottomNav() {
     { label: "Shop", href: "/shop/", icon: Store },
     { label: "Cart", href: "/cart/", icon: ShoppingBag, badge: cartCount },
     { label: "Contact", href: "/contact/", icon: Phone },
+    /* Profile section hidden for now
     { 
       label: isLoggedIn ? "Profile" : "Log in", 
       href: isLoggedIn ? "/profile/" : "/login/", 
       icon: User,
       isProfile: isLoggedIn
     },
+    */
   ];
 
   return (
@@ -43,7 +45,7 @@ export function MobileBottomNav() {
             className={clsx("mobile-bottom-nav__item", isActive && "active")}
           >
             <div className="mobile-bottom-nav__icon-wrapper">
-              {item.isProfile ? (
+              {('isProfile' in item && item.isProfile) ? (
                 <div className="mobile-bottom-nav__avatar">
                   {/* Default initial for profile */}
                   <span>U</span>

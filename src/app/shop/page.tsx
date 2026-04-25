@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { getShowcaseProductsByCategorySlug, products } from "@/data/site";
 import { ProductCard } from "@/components/ui/product-card";
 
-export default function ShopPage() {
+function ShopContent() {
   const searchParams = useSearchParams();
 
   const latestProducts = useMemo(() => {
@@ -132,5 +132,13 @@ export default function ShopPage() {
         </div>
       </div>
     </section>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={null}>
+      <ShopContent />
+    </Suspense>
   );
 }
